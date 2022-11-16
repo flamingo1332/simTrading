@@ -1,4 +1,4 @@
-package com.project.simtrading.common;
+package com.project.simtrading.model.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

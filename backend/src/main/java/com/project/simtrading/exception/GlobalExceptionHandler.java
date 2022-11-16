@@ -1,6 +1,5 @@
 package com.project.simtrading.exception;
 
-import com.project.simtrading.payload.ErrorDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +26,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(APIException.class)
-    public ResponseEntity<ErrorDetails> handleAPIException(APIException exception,
-                                                           WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(),
-                exception.getMessage(), request.getDescription(false));
-
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
-    }
 
 
     //handle global exception --> 위의 specific 한 exception 이외의 모든 exception이 global exception handling으로 처리된다.

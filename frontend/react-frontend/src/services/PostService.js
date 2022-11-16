@@ -13,7 +13,7 @@ class PostService {
         console.log(post);
         return axios.post(POST_API_BASE_URL, post, {
             headers: {
-                'Content-Type': 'application/json'// Post는 문제없는데 Put은 json 명시안하면 requestbody 없다고 에러
+                'Content-Type': 'application/json'
             }
         });
     }

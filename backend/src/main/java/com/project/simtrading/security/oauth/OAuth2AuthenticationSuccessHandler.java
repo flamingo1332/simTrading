@@ -3,8 +3,7 @@ package com.project.simtrading.security.oauth;
 
 import com.project.simtrading.exception.BadRequestException;
 import com.project.simtrading.security.jwt.JwtTokenProvider;
-import com.project.simtrading.utils.CookieUtil;
-import lombok.RequiredArgsConstructor;
+import com.project.simtrading.utils.CookieUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,16 +26,25 @@ import static com.project.simtrading.security.oauth.CookieAuthorizationRequestRe
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${app.oauth2.authorizedRedirectUris}")
-    private String redirectUri;
+    @Value("${app.oauth2.authorizedRedirectUri}")
+    private String REDIRECT_URI;
     @Autowired
     private JwtTokenProvider tokenProvider;
     @Autowired
     private CookieAuthorizationRequestRepository authorizationRequestRepository;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException, IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException, ServletException, IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
+
+        System.out.println("authenticationsuccesshandler ***********");
+        System.out.println("targetUrl :" +targetUrl);
+        System.out.println("Authentication name: " + authentication.getName());
+        System.out.println("Authentication principal: " + authentication.getPrincipal());
+        System.out.println();
 
         if (response.isCommitted()) {
             log.debug("Response has already been committed. Unable to redirect to" + targetUrl);
@@ -45,23 +53,27 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+    protected String determineTargetUrl(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) {
+        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
         if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
             throw new BadRequestException("Unauthorized Redirect URI, can't proceed with the authentication");
         }
+
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         // JWT 생성
-        String accessToken = tokenProvider.createAccessToken(authentication);
-        tokenProvider.createRefreshToken(authentication, response);
+        String token = tokenProvider.createToken(authentication);
+
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("accessToken", accessToken)
+                .queryParam("token",token)
                 .build().toUriString();
     }
 
@@ -72,7 +84,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-        URI authorizedUri = URI.create(redirectUri);
+        URI authorizedUri = URI.create(REDIRECT_URI);
 
         if (authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                 && authorizedUri.getPort() == clientRedirectUri.getPort()) {

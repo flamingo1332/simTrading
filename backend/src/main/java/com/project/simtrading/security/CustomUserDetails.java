@@ -1,6 +1,6 @@
 package com.project.simtrading.security;
 
-import com.project.simtrading.entity.User;
+import com.project.simtrading.model.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,12 +19,15 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private Long id;
     private String email;
+    private String password;
+
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public CustomUserDetails(Long id, String email, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
+        this.password = password;
         this.authorities = authorities;
     }
 
@@ -35,6 +38,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
         return new CustomUserDetails(
                 user.getId(),
                 user.getEmail(),
+                user.getPassword(),
                 authorities
         );
     }
@@ -45,19 +49,20 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
         return userDetails;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public String getUsername() {
+    public String getEmail() {
         return email;
     }
 
     @Override
-    public String getPassword() {
-        return null;
+    public String getPassword() { return password; }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
@@ -80,11 +85,9 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
         return true;
     }
 
-
-    // OAuth2User Override
     @Override
-    public String getName() {
-        return String.valueOf(id);
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
@@ -94,5 +97,10 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+    }
+
+    @Override
+    public String getName() {
+        return String.valueOf(id);
     }
 }

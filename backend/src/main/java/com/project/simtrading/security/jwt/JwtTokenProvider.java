@@ -9,14 +9,12 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,106 +26,70 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
 
-    private final Key SECRET_KEY;
-    private final String COOKIE_REFRESH_TOKEN_KEY;
-    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;		// 1hour
-    private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;	// 1week
-    private final String AUTHORITIES_KEY = "role";
+    @Value("${app.auth.tokenSecret}")
+    private String TOKEN_SECRET;
+
+    @Value("${app.auth.tokenExpirationMsec}")
+    private Long EXP_MSEC;
+
+    private String AUTHORITIES_KEY = "role";
 
     @Autowired
     private UserRepository userRepository;
 
-    public JwtTokenProvider(@Value("${app.auth.jwt-secret}") String secretKey, @Value("${app.auth.refresh-cookie-key}") String cookieKey) {
-        this.SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-        this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
-    }
 
+//    private Key getKey(){
+//        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(TOKEN_SECRET));
+//    }
 
-    public String createAccessToken(Authentication authentication) {
+    public String createToken(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
         Date now = new Date();
-        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
+        Date expDate = new Date(now.getTime() + EXP_MSEC); // 1주
 
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-
-        String userId = user.getName();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+
         return Jwts.builder()
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS512)
-                .setSubject(userId)
+                .setSubject(Long.toString(userDetails.getId()))
                 .claim(AUTHORITIES_KEY, role)
-                .setIssuer("debrains")
                 .setIssuedAt(now)
-                .setExpiration(validity)
+                .setExpiration(expDate)
+                .signWith(SignatureAlgorithm.HS512, TOKEN_SECRET)
                 .compact();
     }
 
-    public void createRefreshToken(Authentication authentication, HttpServletResponse response) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_LENGTH);
-
-        String refreshToken = Jwts.builder()
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS512)
-                .setIssuer("debrains")
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .compact();
-
-        saveRefreshToken(authentication, refreshToken);
-
-        ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Lax")
-                .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
-                .path("/")
-                .build();
-
-        response.addHeader("Set-Cookie", cookie.toString());
-    }
-
-    private void saveRefreshToken(Authentication authentication, String refreshToken) {
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-        Long id = Long.valueOf(user.getName());
-
-        userRepository.updateRefreshToken(id, refreshToken);
-    }
 
     // Access Token을 검사하고 얻은 정보로 Authentication 객체 생성
-    public Authentication getAuthentication(String accessToken) {
-        Claims claims = parseClaims(accessToken);
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(TOKEN_SECRET)
+                .parseClaimsJws(token)
+                .getBody();
 
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
-        CustomUserDetails principal = new CustomUserDetails(Long.valueOf(claims.getSubject()), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return Long.parseLong(claims.getSubject());
     }
 
-    public Boolean validateToken(String token) {
+    public boolean validateToken(String authToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            Jwts.parser().setSigningKey(TOKEN_SECRET).parseClaimsJws(authToken);
             return true;
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token.");
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token.");
-        } catch (IllegalStateException e) {
-            log.info("Invalid JWT token");
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
         }
         return false;
     }
 
-    // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
-    private Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
+
 }

@@ -1,52 +1,68 @@
-package com.project.simtrading.entity;
+package com.project.simtrading.model;
 
-import com.project.simtrading.common.AuthProvider;
-import com.project.simtrading.common.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.simtrading.model.common.AuthProvider;
+import com.project.simtrading.model.common.Role;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username"}),
-        @UniqueConstraint(columnNames = {"email"})
+        @UniqueConstraint(columnNames = "email")
 })
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(unique = true)
-//    private String oAuthId;
+    @Column(nullable = false)
+    private String name;
 
-    @Column(name = "username")
-    private String username;
-
-    @Column(unique = true, name = "email")
+    @Email
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "image")
-    private String image;
+    private String imageUrl;
 
-//    @Column(name = "password") OAuth2 소셜로그인 대체
-//    private String password;
+    @Column(nullable = false)
+    private Boolean emailVerified = false;
+
+    @JsonIgnore
+    private String password;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
+
 
     @CreationTimestamp
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
-    @UpdateTimestamp
-    @Column(name = "date_updated")
-    private LocalDateTime dateUpdated;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
+//    public Boolean getEmailVerified() {
+//        return emailVerified;
+//    }
+//
+//    public void setEmailVerified(Boolean emailVerified) {
+//        this.emailVerified = emailVerified;
+//    }
+
 //    @Column(name = "verification_code", length = 64) //emailVerification 안씀
 //    private String verificationCode;
 //    private boolean enabled;
@@ -66,11 +82,4 @@ public class User {
 //    //usertable 에서 id는 pk 인데 jointable에선(user_roles) fk된다는 뜻.
 //     Role enum으로 변경
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Enumerated(EnumType.STRING)
-    private AuthProvider authProvider;
-
-    private String refreshToken;
 }

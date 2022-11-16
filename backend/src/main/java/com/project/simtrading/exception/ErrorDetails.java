@@ -1,4 +1,4 @@
-package com.project.simtrading.payload;
+package com.project.simtrading.exception;
 
 import lombok.Getter;
 
