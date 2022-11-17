@@ -1,6 +1,6 @@
 package com.project.simtrading.security;
 
-import com.project.simtrading.model.User;
+import com.project.simtrading.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;

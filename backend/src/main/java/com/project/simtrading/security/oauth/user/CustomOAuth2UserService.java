@@ -1,9 +1,9 @@
 package com.project.simtrading.security.oauth.user;
 
 
-import com.project.simtrading.model.common.AuthProvider;
-import com.project.simtrading.model.common.Role;
-import com.project.simtrading.model.User;
+import com.project.simtrading.entity.common.AuthProvider;
+import com.project.simtrading.entity.common.Role;
+import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.OAuthProcessingException;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.security.CustomUserDetails;
@@ -28,12 +28,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
+        System.out.println("********************************************");
         System.out.println("CustomOauth2UserService LoadUser ***********");
+        System.out.println("********************************************");
         System.out.println("registration: " + oAuth2UserRequest.getClientRegistration());
         System.out.println("token : " + oAuth2UserRequest.getAccessToken().getTokenValue());
-//        System.out.println(oAuth2User.getAttributes());
-//        System.out.println(oAuth2User.getName());
-//        System.out.println(oAuth2User.getAuthorities());
+
 
         try {
             return process(oAuth2UserRequest, oAuth2User);
@@ -71,7 +71,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user = createUser(userInfo, authProvider);
         }
 
-        System.out.println("processing complete");
+        System.out.println("CustomOauth2UserService processing complete");
         return CustomUserDetails.create(user, oAuth2User.getAttributes());
     }
 

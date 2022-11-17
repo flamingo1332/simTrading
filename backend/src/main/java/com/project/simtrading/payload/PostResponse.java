@@ -1,6 +1,7 @@
 package com.project.simtrading.payload;
 
 
+import com.project.simtrading.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResponse {
-//    private List<PostDto> content;
+    private List<Post> content;
     private int pageNo;
     private int pageSize;
     private long totalElements;

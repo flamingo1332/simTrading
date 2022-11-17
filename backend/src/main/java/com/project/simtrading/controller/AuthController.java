@@ -1,11 +1,11 @@
 package com.project.simtrading.controller;
 
 import com.project.simtrading.exception.BadRequestException;
-import com.project.simtrading.model.User;
-import com.project.simtrading.model.common.AuthProvider;
-import com.project.simtrading.model.common.Role;
+import com.project.simtrading.entity.User;
+import com.project.simtrading.entity.common.AuthProvider;
+import com.project.simtrading.entity.common.Role;
 import com.project.simtrading.payload.ApiResponse;
-import com.project.simtrading.payload.AuthResponse;
+import com.project.simtrading.payload.JwtAuthResponse;
 import com.project.simtrading.payload.LoginRequest;
 import com.project.simtrading.payload.SignUpRequest;
 import com.project.simtrading.repo.UserRepository;
@@ -32,13 +32,12 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private JwtTokenProvider tokenProvider;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -54,7 +53,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.createToken(authentication);
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(new JwtAuthResponse(token));
     }
 
     @PostMapping("/signup")
@@ -72,7 +71,7 @@ public class AuthController {
         user.setProvider(AuthProvider.local);
         user.setRole(Role.USER);
 
-//        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User result = userRepository.save(user);
 

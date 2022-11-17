@@ -1,6 +1,6 @@
 package com.project.simtrading.security;
 
-import com.project.simtrading.model.User;
+import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
 import com.project.simtrading.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

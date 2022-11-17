@@ -5,6 +5,7 @@ import ListPostComponent from './components/ListPostComponent';
 import HeaderComponent from './components/HeaderComponent';
 import FooterComponent from './components/FooterComponent';
 import CreatePostComponent from './components/CreatePostComponent';
+import HomeComponent from './components/home/HomeComponent';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
 
           <Routes>
             {/* element 안에 < > 형식으로 안하면 적용안됨 */}
-            <Route path='/' exact element={<ListPostComponent />} />
+            <Route path='/' element={<HomeComponent />} />
             <Route path='/posts' element={<ListPostComponent />} />
             <Route path='/create-post' element={<CreatePostComponent />} />
             <Route path='/edit-post/:id' element={<CreatePostComponent />} />

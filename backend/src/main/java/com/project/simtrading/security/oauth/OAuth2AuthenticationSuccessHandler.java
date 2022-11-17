@@ -40,7 +40,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throws IOException, ServletException, IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
-        System.out.println("authenticationsuccesshandler ***********");
+        System.out.println("****************************************");
+        System.out.println("authenticationSuccessHandler ***********");
+        System.out.println("****************************************");
+
         System.out.println("targetUrl :" +targetUrl);
         System.out.println("Authentication name: " + authentication.getName());
         System.out.println("Authentication principal: " + authentication.getPrincipal());
@@ -54,6 +57,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
+        System.out.println("authenticationSuccessHandler complete");
     }
 
     protected String determineTargetUrl(HttpServletRequest request,

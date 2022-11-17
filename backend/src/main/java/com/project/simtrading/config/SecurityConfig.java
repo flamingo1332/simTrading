@@ -1,7 +1,6 @@
 package com.project.simtrading.config;
 
 
-import com.project.simtrading.model.common.Role;
 import com.project.simtrading.security.CustomUserDetailsService;
 import com.project.simtrading.security.jwt.JwtAccessDeniedHandler;
 import com.project.simtrading.security.jwt.JwtAuthenticationEntryPoint;
@@ -10,31 +9,22 @@ import com.project.simtrading.security.oauth.CookieAuthorizationRequestRepositor
 import com.project.simtrading.security.oauth.user.CustomOAuth2UserService;
 import com.project.simtrading.security.oauth.OAuth2AuthenticationFailureHandler;
 import com.project.simtrading.security.oauth.OAuth2AuthenticationSuccessHandler;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.DeprecatedConfigurationProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import javax.servlet.http.Cookie;
 
 
 @Configuration
@@ -47,6 +37,9 @@ import javax.servlet.http.Cookie;
 public class SecurityConfig {
 
     private final long MAX_AGE_SECS = 3600;
+    @Value("${app.cors.allowedOrigins}")
+    private String[] allowedOrigins;
+
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
@@ -58,8 +51,7 @@ public class SecurityConfig {
     @Autowired
     private OAuth2AuthenticationFailureHandler authenticationFailureHandler;
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
@@ -70,18 +62,26 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 //    @Bean
 //    protected AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
 //        return new CookieAuthorizationRequestRepository();
 //    }
 
+
     //    // https://www.baeldung.com/spring-cors#cors-with-spring-security
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("*******************************");
         System.out.println("securityfilterchain ***********");
+        System.out.println("*******************************");
+
         http
                 .cors()
-                .and()// disable 안하면 Spring Security will reject the request before it reaches Spring MVC.
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -114,7 +114,7 @@ public class SecurityConfig {
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -140,8 +140,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
-                        .allowedOrigins("http://localhost:8080")
+                        .allowedOrigins(allowedOrigins)
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true)

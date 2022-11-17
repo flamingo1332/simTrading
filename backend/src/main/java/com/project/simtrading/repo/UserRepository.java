@@ -1,6 +1,6 @@
 package com.project.simtrading.repo;
 
-import com.project.simtrading.model.User;
+import com.project.simtrading.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByName(String username);
-    Optional<User> findById(long id);
     Boolean existsByName(String username);
     Boolean existsByEmail(String email);
 
