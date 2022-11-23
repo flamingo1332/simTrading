@@ -4,14 +4,19 @@ import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.security.CustomUserDetails;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -19,7 +24,7 @@ public class UserController {
 
 
     @PreAuthorize("hasRole('USER')") // 된다.
-    @GetMapping("/user/me")
+    @GetMapping("/me")
     public User getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         System.out.println("getCurrentUser");
         System.out.println(customUserDetails.getName());
@@ -30,9 +35,9 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", customUserDetails.getId()));
     }
 
-    @GetMapping("/user/me2")
-    public String getCurrentUser2() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getCurrentUser2(@PathVariable long id) {
+        return ResponseEntity.ok(userRepository.findById(id).orElseThrow());
     }
 
 
