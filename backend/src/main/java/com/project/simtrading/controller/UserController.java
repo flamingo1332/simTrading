@@ -16,23 +16,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
 
-    @PreAuthorize("hasRole('USER')") // 된다.
+//    @PreAuthorize("hasRole('USER')") // 된다.
     @GetMapping("/me")
-    public User getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         System.out.println("getCurrentUser");
         System.out.println(customUserDetails.getName());
         System.out.println(customUserDetails.getEmail());
         System.out.println(customUserDetails.getAttributes());
 
-        return userRepository.findById(customUserDetails.getId())
+        User user = userRepository.findById(customUserDetails.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", customUserDetails.getId()));
+
+        System.out.println(user.getName());
+        System.out.println(user.getEmail());
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{id}")

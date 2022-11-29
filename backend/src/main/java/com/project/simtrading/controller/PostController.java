@@ -11,12 +11,14 @@ import com.project.simtrading.security.jwt.JwtTokenProvider;
 import com.project.simtrading.service.LikeService;
 import com.project.simtrading.service.PostService;
 import com.project.simtrading.utils.AppConst;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -32,7 +34,10 @@ public class PostController {
         return ResponseEntity.ok(postService.createPost(postDto, id));
     }
 
-
+    @GetMapping("/test")
+    public ResponseEntity<List<PostDto>> getPostsTest(){
+        return ResponseEntity.ok(postService.getAllPosts());
+    }
 
     @GetMapping
     public PostResponse getAllPosts(
