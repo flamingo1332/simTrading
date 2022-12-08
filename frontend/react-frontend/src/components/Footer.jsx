@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const FooterComponent = () => {
   return (
     <div>
-      <footer className="footer ">
+      <footer className="fixed-bottom card text-center">
         <span className="text-muted">All Rights Reserevd 2022 @simTrading</span>
       </footer>
     </div>

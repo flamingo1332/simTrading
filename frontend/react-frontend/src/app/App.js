@@ -10,16 +10,17 @@ import Login from '../auth/login/Login';
 import SignUp from '../auth/signup/SignUp';
 import { getCurrentUser } from '../auth/APIUtils'
 import { ACCESS_TOKEN } from '../constants';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import OAuth2RedirectHandler from '../auth/oauth2/OAuth2RedirectHandler';
 import Profile from '../auth/profile/Profile';
-import { useNavigate } from 'react-router-dom';
+import Coin from '../components/coin/Coin';
+import Coins from '../components/coin/Coins';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     loadCurrentlyLoggedInUser();
@@ -56,8 +57,11 @@ function App() {
       <div className="container">
 
         <Routes>
-          {/* element 안에 < > 형식으로 안하면 적용안됨 */}
           <Route path='/' element={<Home />} />
+          <Route path="/coins" element={<Coins />} />
+          <Route path="/coins/:id" element={<Coin authenticated={authenticated} />} />
+
+
           <Route path='/posts' element={<ListPost />} />
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/edit-post/:id' element={<CreatePost />} />

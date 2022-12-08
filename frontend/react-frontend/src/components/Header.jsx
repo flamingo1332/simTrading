@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react
 import { toast } from "react-toastify";
 
 const Header = (props) => {
-  console.log(props);
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -21,8 +20,8 @@ const Header = (props) => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link to={"/"} className="nav-link">
-                  Stock
+                <Link to={"/coins"} className="nav-link">
+                  Coins
                 </Link>
               </li>
 
@@ -41,9 +40,9 @@ const Header = (props) => {
                 </li>
                 <li>
                   {/* 로그아웃 Link 사용하면 useNavigate 안됌 */}
-                  <a onClick={() => logOut()} className="nav-link">
+                  <button onClick={() => logOut()} className="nav-link border-0 btn-link btn">
                     Logout
-                  </a>
+                  </button>
                 </li>
               </ul>
             ) : (

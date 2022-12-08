@@ -4,20 +4,13 @@ package com.project.simtrading.security.jwt;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.security.CustomUserDetails;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -38,9 +31,6 @@ public class JwtTokenProvider {
     private UserRepository userRepository;
 
 
-//    private Key getKey(){
-//        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(TOKEN_SECRET));
-//    }
 
     public String createToken(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

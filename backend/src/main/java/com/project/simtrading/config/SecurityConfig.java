@@ -72,6 +72,7 @@ public class SecurityConfig {
 //    }
 
 
+
     //    // https://www.baeldung.com/spring-cors#cors-with-spring-security
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

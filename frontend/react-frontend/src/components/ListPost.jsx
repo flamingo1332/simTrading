@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PostService from "../services/PostService";
+import PostService from "../hooks/PostService";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 

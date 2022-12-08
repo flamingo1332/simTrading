@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { useState, useEffect } from "react";
-import PostService from "../services/PostService";
+import PostService from "../hooks/PostService";
 import { useNavigate, useParams } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 

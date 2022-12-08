@@ -1,0 +1,4 @@
+2022-11-30 22:22:42.587[1669814562587] | INFO  | main       | c.b.c.client.utils.RequestHandler    - GET https://api.binance.com/api/v3/exchangeInfo
+2022-11-30 22:22:43.242[1669814563242] | INFO  | main       | c.b.c.client.utils.RequestHandler    - GET https://api.binance.com/api/v3/exchangeInfo?symbol=BTCUSDT
+2022-11-30 22:22:54.098[1669814574098] | INFO  | main       | c.b.c.client.utils.RequestHandler    - GET https://api.binance.com/api/v3/exchangeInfo
+2022-11-30 22:22:54.723[1669814574723] | INFO  | main       | c.b.c.client.utils.RequestHandler    - GET https://api.binance.com/api/v3/exchangeInfo?symbol=BTCUSDT
