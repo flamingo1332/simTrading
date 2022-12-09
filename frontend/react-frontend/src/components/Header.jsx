@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import googleLogo from "../img/google-logo.png";
+import { GOOGLE_AUTH_URL } from "../constants";
 
 const Header = (props) => {
   const navigate = useNavigate();
@@ -48,14 +50,9 @@ const Header = (props) => {
             ) : (
               <ul className="navbar-nav ">
                 <li>
-                  <Link to={"/login"} className="nav-link">
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link to={"/signup"} className="nav-link">
-                    Signup
-                  </Link>
+                  <a href={GOOGLE_AUTH_URL} className="btn btn-primary btn-sm" type="submit">
+                    <img src={googleLogo} width="30px" /> Log in with Google
+                  </a>
                 </li>
               </ul>
             )}

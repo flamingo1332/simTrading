@@ -27,8 +27,6 @@ public class JwtTokenProvider {
 
     private String AUTHORITIES_KEY = "role";
 
-    @Autowired
-    private UserRepository userRepository;
 
 
 

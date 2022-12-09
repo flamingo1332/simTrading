@@ -11,6 +11,7 @@ const useAxios = (param) => {
   axios.defaults.headers.common = { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) };
 
   const fetchData = async () => {
+    console.log("fetching data");
     setLoading(true);
     await axios
       .get(param)

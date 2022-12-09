@@ -23,25 +23,17 @@ public class UserController {
     private UserRepository userRepository;
 
 
+//    @AuthenticationPrincipal == authentication.getPrincipal(); //securitycontextholder에서 가져오는 건가
 //    @PreAuthorize("hasRole('USER')") // 된다.
     @GetMapping("/me")
     public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         System.out.println("getCurrentUser");
         System.out.println(customUserDetails.getName());
         System.out.println(customUserDetails.getEmail());
-        System.out.println(customUserDetails.getAttributes());
 
         User user = userRepository.findById(customUserDetails.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", customUserDetails.getId()));
-
-        System.out.println(user.getName());
-        System.out.println(user.getEmail());
         return ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getCurrentUser2(@PathVariable long id) {
-        return ResponseEntity.ok(userRepository.findById(id).orElseThrow());
     }
 
 

@@ -5,7 +5,7 @@ import Trending from "../coin/Trending";
 
 const Home = () => {
   return (
-    <div className="home-container">
+    <div className="home-container mb-5">
       <Trending />
     </div>
   );

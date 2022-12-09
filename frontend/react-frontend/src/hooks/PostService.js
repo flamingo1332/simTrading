@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // PostDto 아니라 PostResponse(pagination용) 사용하려면 다르게 해야함
-const POST_API_BASE_URL = "http://localhost:8080/api/v1/posts"
+const POST_API_BASE_URL = "http://localhost:8080/api/posts"
 
 class PostService {
 

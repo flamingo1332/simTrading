@@ -6,8 +6,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CreatePost from '../components/CreatePost';
 import Home from '../components/home/Home';
-import Login from '../auth/login/Login';
-import SignUp from '../auth/signup/SignUp';
 import { getCurrentUser } from '../auth/APIUtils'
 import { ACCESS_TOKEN } from '../constants';
 import { toast } from 'react-toastify';
@@ -61,15 +59,11 @@ function App() {
           <Route path="/coins" element={<Coins />} />
           <Route path="/coins/:id" element={<Coin authenticated={authenticated} />} />
 
-
           <Route path='/posts' element={<ListPost />} />
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/edit-post/:id' element={<CreatePost />} />
           <Route path='/delete-post/:id' element={<ListPost />} />
 
-
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<SignUp />} />
           <Route path='/Profile' element={<Profile currentUser={currentUser} />} />
           <Route path='/oauth2/redirect' element={<OAuth2RedirectHandler />} />
 

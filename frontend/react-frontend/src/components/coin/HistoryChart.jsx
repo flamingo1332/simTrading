@@ -12,10 +12,6 @@ const HistoryChart = () => {
   const [days, setDays] = useState("30");
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { dummy } = [
-    [1538856000000, 6593.34, 6600, 6582.63, 6600],
-    [1538856900000, 6595.16, 6604.76, 6590.73, 6593.86],
-  ];
 
   useEffect(() => {
     setLoading(true);
@@ -38,39 +34,7 @@ const HistoryChart = () => {
     setDays(event.target.value);
   };
 
-  if (loading) {
-    return (
-      <div className="container mb-3">
-        <ReactApexChart
-          options={{
-            chart: {
-              type: "candlestick",
-              height: 350,
-            },
-            title: {
-              text: "CandleStick Chart",
-              align: "left",
-            },
-            xaxis: {
-              type: "datetime",
-            },
-            yaxis: {
-              tooltip: {
-                enabled: true,
-              },
-            },
-          }}
-          series={[
-            {
-              data: dummy,
-            },
-          ]}
-          type="candlestick"
-          height={350}
-        />
-      </div>
-    );
-  } else if (response)
+  if (!loading && response)
     return (
       <div className="container mt-3 mb-3">
         <ReactApexChart

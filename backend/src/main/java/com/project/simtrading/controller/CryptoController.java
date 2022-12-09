@@ -7,10 +7,12 @@ import com.jzhangdeveloper.newsapi.net.NewsAPIResponse;
 import com.jzhangdeveloper.newsapi.params.EverythingParams;
 import com.litesoftwares.coingecko.CoinGeckoApiClient;
 import com.litesoftwares.coingecko.domain.Coins.CoinFullData;
+import com.litesoftwares.coingecko.domain.Coins.CoinMarkets;
 import com.litesoftwares.coingecko.domain.Coins.MarketChart;
 import com.litesoftwares.coingecko.domain.Search.Trending;
 import com.litesoftwares.coingecko.impl.CoinGeckoApiClientImpl;
 import io.swagger.models.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequestMapping("/api/crypto")
 public class CryptoController {
 
+
     private CoinGeckoApiClient client;
     private NewsAPIClient newsApiClient;
     @Value("${app.api.coinGecko.baseUri}")
@@ -32,17 +35,31 @@ public class CryptoController {
     @Value("${app.api.newsApi.key}")
     private String NEWS_API_KEY;
 
+    private CryptoController(){
+        client = new CoinGeckoApiClientImpl();
+    }
 
 //    @AuthenticationPrincipal 자체가 authentication 기능 있다. 토큰없으면 리턴안함
     @GetMapping("/trending")
     public ResponseEntity<Trending> getTrendingCoins(){
-        CoinGeckoApiClient client = new CoinGeckoApiClientImpl(); //나중에 다른 방식으로 해보고 비교
+//        CoinGeckoApiClient client = new CoinGeckoApiClientImpl(); //나중에 다른 방식으로 해보고 비교
 
-        Trending trending = client.getTrending();
-        client.shutdown();
-        return ResponseEntity.ok(trending);
+//        Trending trending = client.getTrending();
+//        client.shutdown();
+
+//        Shutdown Isn’t Necessary¶
+//        The threads and connections that are held will be released automatically if they remain idle.
+//        But if you are writing a application that needs to aggressively release unused resources you may do so.
+//        출처 : https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/ 셧다운 안해도될듯
+
+        return ResponseEntity.ok(client.getTrending());
     }
 
+    @GetMapping("/{ids}/markets")
+    public ResponseEntity<List<CoinMarkets>> getMarkets(@PathVariable(name = "ids") String ids){
+        return ResponseEntity.ok(client.getCoinMarkets("usd", ids, null,
+                10, 1, false, "24"));
+    }
 
 
     @GetMapping("/{id}")
