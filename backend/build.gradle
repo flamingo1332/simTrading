@@ -46,7 +46,7 @@ dependencies {
 
 
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-	// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+
 // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api

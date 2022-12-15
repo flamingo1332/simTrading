@@ -67,25 +67,25 @@ const HistoryChart = () => {
         <div>
           <span className="h5 text-muted">Interval(days): </span>
           <button onClick={(e) => setInterval(e)} value="1" className="btn btn-outline-secondary mr-2 ml-2">
-            1
+            1D
           </button>
           <button onClick={(e) => setInterval(e)} value="7" className="btn btn-outline-secondary mr-2">
-            7
+            1W
           </button>
           <button onClick={(e) => setInterval(e)} value="14" className="btn btn-outline-secondary mr-2">
-            14
+            2W
           </button>
           <button onClick={(e) => setInterval(e)} value="30" className="btn btn-outline-secondary mr-2">
-            30
+            1M
           </button>
           <button onClick={(e) => setInterval(e)} value="90" className="btn btn-outline-secondary mr-2">
-            90
+            3M
           </button>
           <button onClick={(e) => setInterval(e)} value="180" className="btn btn-outline-secondary mr-2">
-            180
+            6M
           </button>
           <button onClick={(e) => setInterval(e)} value="365" className="btn btn-outline-secondary mr-2">
-            365
+            1Y
           </button>
         </div>
       </div>

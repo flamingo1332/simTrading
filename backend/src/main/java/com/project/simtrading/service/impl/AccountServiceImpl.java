@@ -1,5 +1,7 @@
 package com.project.simtrading.service.impl;
 
+import com.litesoftwares.coingecko.CoinGeckoApiClient;
+import com.litesoftwares.coingecko.impl.CoinGeckoApiClientImpl;
 import com.project.simtrading.entity.Account;
 import com.project.simtrading.entity.BuyOrder;
 import com.project.simtrading.entity.SellOrder;
@@ -11,7 +13,6 @@ import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -23,13 +24,16 @@ public class AccountServiceImpl implements AccountService {
     private UserRepository userRepository;
 
     @Override
-    public Account createAccount(long id, double initialBalance) {
+    public Account createAccount(long id, double initialBalance, String name, String description) {
         User user = userRepository.findById(id).orElseThrow(() ->
             new ResourceNotFoundException("user", "id", id));
 
         Account account = new Account();
         account.setBalance(initialBalance);
         account.setTotal(initialBalance);
+        account.setInitialBalance(initialBalance);
+        account.setName(name);
+        account.setDescription(description);
         account.setBuyOrders(new ArrayList<>());
         account.setSellOrders(new ArrayList<>());
         account.setCoins(new HashMap<>());
@@ -51,10 +55,33 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account updateAccountTotal(long id) {
-//        getAccountByUserId(1)
+    public List<Account> getAccountByUserIdUpdated(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id));
+        List<Account> accounts = user.getAccounts();
+        String input = "";
+
+        for(Account account : accounts)
+            for(String key : account.getCoins().keySet())
+                input += key;
+
+        CoinGeckoApiClient client = new CoinGeckoApiClientImpl();
+        Map<String, Map<String, Double>> prices = client.getPrice(input, "usd");
+
+        for(Account account : accounts){
+            Map<String, Double> map = account.getCoins();
+            Double total = account.getBalance();
+
+            for(String key : map.keySet()){
+                total += prices.get(key).get("usd") * map.get(key);
+            }
+
+            account.setTotal(total);
+            repository.save(account);
+        }
+
         return null;
     }
+
 
     @Override
     public Account buyCoin(long id, String coin, double amount, double price) {

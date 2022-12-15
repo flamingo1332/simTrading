@@ -25,6 +25,7 @@ public class UserController {
 
 //    @AuthenticationPrincipal == authentication.getPrincipal(); //securitycontextholder에서 가져오는 건가
 //    @PreAuthorize("hasRole('USER')") // 된다.
+//    account삭제 post 삭제 등 authenticationPrincipal과 path/param id와 일치할 때만 통과하게 해야 함
     @GetMapping("/me")
     public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         System.out.println("getCurrentUser");

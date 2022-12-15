@@ -1,14 +1,10 @@
 package com.project.simtrading.controller;
 
-import com.project.simtrading.entity.Comment;
-import com.project.simtrading.entity.SubComment;
+import com.project.simtrading.payload.CommentRequest;
 import com.project.simtrading.payload.CommentResponse;
 import com.project.simtrading.payload.dto.CommentDto;
-import com.project.simtrading.payload.dto.SubCommentDto;
 import com.project.simtrading.security.CustomUserDetails;
-import com.project.simtrading.security.jwt.JwtTokenProvider;
 import com.project.simtrading.service.CommentService;
-import com.project.simtrading.service.SubCommentService;
 import com.project.simtrading.utils.AppConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +18,7 @@ import javax.validation.Valid;
 public class CommentController {
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private SubCommentService subCommentService;
+
 
 
     @GetMapping("/posts/{postId}/comments")
@@ -38,9 +33,9 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable(name = "postId") long postId,
-                                                    @Valid @RequestBody CommentDto commentDto,
+                                                    @Valid @RequestBody CommentRequest request,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return ResponseEntity.ok(commentService.createComment(commentDto, postId, customUserDetails.getId()));
+        return ResponseEntity.ok(commentService.createComment(request, postId, customUserDetails.getId()));
     }
 
     @PutMapping("/comments/{id}")
@@ -55,11 +50,5 @@ public class CommentController {
         return ResponseEntity.ok("Comment successfully deleted");
     }
 
-    @PostMapping("/comments/{commentId}/subComments")
-    public ResponseEntity<SubCommentDto> createSubComment(@PathVariable(name = "postId") long commentId,
-                                                          @Valid @RequestBody SubCommentDto subCommentDto,
-                                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return ResponseEntity.ok(subCommentService.createSubComment(subCommentDto, commentId, customUserDetails.getId()));
-    }
 
 }

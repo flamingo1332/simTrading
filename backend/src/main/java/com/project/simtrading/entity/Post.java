@@ -1,6 +1,7 @@
 package com.project.simtrading.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,8 +23,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "posts")
-public class Post {
 
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,13 +32,12 @@ public class Post {
     // should not be null
     // at least ~ char
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "content")
     private String content;
 
-    private int view;
+    @Column
+    private String coin;
+
 
     @CreationTimestamp
     private LocalDateTime dateCreated;
@@ -44,13 +45,18 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime dateUpdated;
 
+
+
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<Like> likes;
+    private List<Like> likes;
+
+
 }

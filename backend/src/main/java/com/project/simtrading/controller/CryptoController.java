@@ -28,9 +28,6 @@ public class CryptoController {
 
 
     private CoinGeckoApiClient client;
-    private NewsAPIClient newsApiClient;
-    @Value("${app.api.coinGecko.baseUri}")
-    private String baseUrl;
 
     @Value("${app.api.newsApi.key}")
     private String NEWS_API_KEY;
@@ -55,10 +52,13 @@ public class CryptoController {
         return ResponseEntity.ok(client.getTrending());
     }
 
-    @GetMapping("/{ids}/markets")
-    public ResponseEntity<List<CoinMarkets>> getMarkets(@PathVariable(name = "ids") String ids){
+    @GetMapping("/markets")
+    public ResponseEntity<List<CoinMarkets>> getMarkets(@RequestParam(name = "ids", defaultValue = "") String ids,
+                                                        @RequestParam(name = "per_page") int perPage,
+                                                        @RequestParam(name = "page") int page) {
+        System.out.println("markets!!!!!!!!!!!!!!!!!!");
         return ResponseEntity.ok(client.getCoinMarkets("usd", ids, null,
-                10, 1, false, "24"));
+                perPage, page, false, "24"));
     }
 
 
@@ -69,11 +69,7 @@ public class CryptoController {
                                                     @RequestParam(name = "market_data", defaultValue = "false") boolean marketData,
                                                     @RequestParam(name = "community_data", defaultValue = "false") boolean communityData,
                                                     @RequestParam(name = "sparkline", defaultValue = "false") boolean sparkline){
-        CoinGeckoApiClient client = new CoinGeckoApiClientImpl();
-
-        CoinFullData coin = client.getCoinById(id, localization, tickers, true, communityData, false,  sparkline);
-        client.shutdown();
-        return ResponseEntity.ok(coin);
+        return ResponseEntity.ok(client.getCoinById(id, localization, tickers, true, communityData, false,  sparkline));
     }
 
     @GetMapping("/{id}/market_chart")
@@ -81,19 +77,14 @@ public class CryptoController {
                                                     @RequestParam(name = "vs_currency", defaultValue = "usd") String vsCurrency,
                                                     @RequestParam(name = "days", defaultValue = "30") int days,
                                                     @RequestParam(name = "interval", defaultValue = "daily") String interval){
-        CoinGeckoApiClient client = new CoinGeckoApiClientImpl();
-
-        MarketChart chart = client.getCoinMarketChartById(id, vsCurrency, days, interval);
-        client.shutdown();
-
-        return ResponseEntity.ok(chart);
+        return ResponseEntity.ok(client.getCoinMarketChartById(id, vsCurrency, days, interval));
     }
 
     @GetMapping("/{id}/ohlc")
     public ResponseEntity<List<List<Double>>> getOhlc(@PathVariable(name = "id") String id,
                                                       @RequestParam(name = "vs_currency", defaultValue = "usd") String vsCurrency,
                                                       @RequestParam(name = "days", defaultValue = "90") int days){
-        CoinGeckoApiClient client = new CoinGeckoApiClientImpl();
+
         List<List<String>> data = client.getCoinOHLC(id, vsCurrency, days);
         List<List<Double>> dataNum = new ArrayList<>();
 
@@ -102,11 +93,9 @@ public class CryptoController {
             for( int j = 0; j < 5; j ++)
                 dataNum.get(i).add(Double.parseDouble(data.get(i).get(j)));
         }
-
-        client.shutdown();
-
         return ResponseEntity.ok(dataNum);
     }
+
 
     @GetMapping("{id}/news")
     public ResponseEntity<Object> getCoinNews(@PathVariable(name = "id") String id) throws IOException, InterruptedException {
@@ -119,9 +108,8 @@ public class CryptoController {
                 .setSearchQuery(id)
                 .setLanguage("en")
                 .build();
-        NewsAPIResponse response = newsApiClient.getEverything(everythingParams);
 
-        return ResponseEntity.ok(response.getBody());
+        return ResponseEntity.ok(newsApiClient.getEverything(everythingParams).getBody());
     }
 
 }

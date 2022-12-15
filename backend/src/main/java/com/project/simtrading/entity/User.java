@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -30,11 +31,13 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+
     @Email
     @Column(nullable = false)
     private String email;
 
     private String imageUrl;
+
 
     @JsonIgnore
     private String password;
@@ -43,10 +46,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
+    @JsonIgnore
     private String providerId;
 
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Size(max=10)
     private List<Account>  accounts;
 
     @CreationTimestamp
@@ -55,17 +61,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Post> posts;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    private List<Post> posts;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Like> likes;
+    private List<Comment> comments;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Like> likes;
 
 //    public Boolean getEmailVerified() {
 //        return emailVerified;

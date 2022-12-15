@@ -3,15 +3,15 @@ import useAxios from "../../hooks/useAxios";
 import { useEffect, useState } from "react";
 const CoinTrending = ({ coin, market }) => {
   return (
-    <Link to={`/coins/${coin.id}`} className="col-md-4 text-dark text-decoration-none mb-3 ">
-      <div className="card p-3 ">
+    <Link to={`/coins/${coin.id}`} className="col-md-4 text-dark text-decoration-none mb-3  ">
+      <div className="card p-3 shadow border ">
         <div className="d-flex flex-row mb-3 ">
-          <img src={coin.small} width="40" />
+          <img src={coin.small} width="40rem" height="40rem" />
           <div className="d-flex flex-column ml-2">
             <span>
               {coin.score + 1}. {coin.name}
               <br />
-              <span className="text-black-50"> Symbol: {coin.symbol}</span>
+              <span className="text-black-50">&nbsp; Symbol: {coin.symbol}</span>
             </span>
           </div>
         </div>

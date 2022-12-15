@@ -7,9 +7,6 @@ const request = (options) => {
 
     if (localStorage.getItem(ACCESS_TOKEN)) {
         headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
-
-        // 엑세스토큰 확인
-        console.log("AccessToken : " + localStorage.getItem(ACCESS_TOKEN));
     } else {
         console.log("AccessToken not found");
     }
@@ -39,18 +36,5 @@ export function getCurrentUser() {
     });
 }
 
-export function login(loginRequest) {
-    return request({
-        url: API_BASE_URL + "/api/auth/login",
-        method: 'POST',
-        body: JSON.stringify(loginRequest)
-    });
-}
 
-export function signup(signupRequest) {
-    return request({
-        url: API_BASE_URL + "/api/auth/signup",
-        method: 'POST',
-        body: JSON.stringify(signupRequest)
-    });
-}
+

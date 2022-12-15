@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -16,9 +17,11 @@ import java.util.Set;
 public class CommentDto {
     private Long id;
 
-    @NotBlank(message = "Body should not be null or empty")
-    @Size(min = 1, message = "Comment body should be more than 1 char")
+
     private String body;
 
-    private Set<SubCommentDto> subComments;
+    private LocalDateTime dateCreated;
+    private LocalDateTime dateUpdated;
+
+    private UserDto user;
 }

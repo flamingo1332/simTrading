@@ -4,6 +4,7 @@ import com.project.simtrading.entity.Comment;
 import com.project.simtrading.entity.Post;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
+import com.project.simtrading.payload.CommentRequest;
 import com.project.simtrading.payload.CommentResponse;
 import com.project.simtrading.payload.dto.CommentDto;
 import com.project.simtrading.repo.CommentRepository;
@@ -33,14 +34,15 @@ public class CommentServiceImpl implements CommentService {
     private ModelMapper mapper;
 
     @Override
-    public CommentDto createComment(CommentDto commentDto, long postId, long commenterId) {
+    public CommentDto createComment(CommentRequest request, long postId, long commenterId) {
         Post post = postRepository.findById(postId).orElseThrow(()
                 -> new ResourceNotFoundException("Post", "id", postId));
 
         User loggedUser = userRepository.findById(commenterId).orElseThrow(()
                 -> new ResourceNotFoundException("User", "id", commenterId));
 
-        Comment comment = mapToEntity(commentDto);
+        Comment comment = new Comment();
+        comment.setBody(request.getBody());
         comment.setPost(post);
         comment.setUser(loggedUser);
 

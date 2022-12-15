@@ -41,14 +41,20 @@ public class Account {
 
     @Column
     @NotNull
+    private String name;
+
+    @Column
+    @NotNull
+    private String description;
+
+    @Column
+    @NotNull
     private Double balance;
 
     @Column
-    @NotNull
     private Double total;
 
     @Column
-    @NotNull
     private Double initialBalance;
 
 }

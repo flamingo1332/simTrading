@@ -9,6 +9,7 @@ const Trending = () => {
   const { response, loading } = useAxios("/api/crypto/trending");
   const [markets, setMarkets] = useState(null);
   const [response2, setResponse2] = useState(null); //market data (trending coins)
+
   useEffect(() => {
     if (response) {
       const temp = response.coins.map((coin) => {
@@ -16,7 +17,7 @@ const Trending = () => {
       });
 
       axios
-        .get(API_BASE_URL + `/api/crypto/${temp.toString()}/markets`, {
+        .get(API_BASE_URL + `/api/crypto/markets?ids=${temp.toString()}&per_page=10&page=1`, {
           headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
         })
         .then((res) => {
@@ -33,9 +34,9 @@ const Trending = () => {
   } else if (response && response2)
     return (
       <div className="mt-8">
-        <h1 className="text-2xl mb-2">Trending</h1>
+        <h1 className="text-2xl mb-2">Top 7 Trending Coins</h1>
         <div className="container mt-5">
-          <div className="row">
+          <div className="row ">
             {response &&
               response.coins.map((coin) => (
                 <CoinTrending

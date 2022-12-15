@@ -1,0 +1,8 @@
+.my-input::placeholder {
+  color: white;
+}
+
+.my-input {
+  border-radius: 30px;
+  border-width: 3px;
+}

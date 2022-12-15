@@ -94,7 +94,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/**", "/api/v1/auth/**", "/api/v1/users/**").permitAll()
+                        .antMatchers("/**", "/api/v1/auth/**", "/api/users/**", "/api/posts/**").permitAll()
                         .antMatchers("/v2/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
@@ -142,7 +142,7 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(allowedOrigins)
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true)
                         .maxAge(MAX_AGE_SECS);
