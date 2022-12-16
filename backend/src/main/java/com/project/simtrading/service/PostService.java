@@ -1,16 +1,14 @@
 package com.project.simtrading.service;
 
-import com.project.simtrading.entity.Post;
 import com.project.simtrading.payload.PostRequest;
-import com.project.simtrading.payload.PostResponse;
-import com.project.simtrading.payload.dto.PostDto;
+import com.project.simtrading.payload.reponseDto.PostDto;
 
 import java.util.List;
 
 public interface PostService {
     PostDto createPost(PostRequest request, long id);
 
-    PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir);
+//    PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir);
 
     List<PostDto> getPostsByCoin(String coin);
 

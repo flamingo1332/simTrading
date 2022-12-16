@@ -42,7 +42,10 @@ const HistoryChart = () => {
             chart: {
               type: "candlestick",
               height: 350,
+              background: "#EEEEEE",
+              fontFamily: "italic",
             },
+
             title: {
               text: id.toUpperCase(),
               align: "left",
@@ -62,7 +65,7 @@ const HistoryChart = () => {
             },
           ]}
           type="candlestick"
-          height={350}
+          height={500}
         />
         <div>
           <span className="h5 text-muted">Interval(days): </span>
@@ -87,6 +90,7 @@ const HistoryChart = () => {
           <button onClick={(e) => setInterval(e)} value="365" className="btn btn-outline-secondary mr-2">
             1Y
           </button>
+          <hr />
         </div>
       </div>
     );

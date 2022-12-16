@@ -4,13 +4,19 @@ import { toast } from "react-toastify";
 import googleLogo from "../img/google-logo.png";
 import { GOOGLE_AUTH_URL } from "../constants";
 import "./Headers.css";
+import { useState } from "react";
 
 const Header = (props) => {
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
   const logOut = () => {
     navigate("/");
     props.handleLogout();
+  };
+
+  const searchQuery = () => {
+    navigate(`/search/${query}`);
   };
 
   return (
@@ -23,7 +29,7 @@ const Header = (props) => {
           <div className="collapse navbar-collapse " id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link style={{ color: "black" }} to={"/coins"} className="nav-link  text-light">
+                <Link to={"/coins"} className="nav-link  text-light">
                   Coins{" "}
                   <span style={{ fontSize: "13px", fontStyle: "italic" }} className="font-sm">
                     by Market cap
@@ -32,13 +38,18 @@ const Header = (props) => {
               </li>
 
               <li className="nav-item">
-                <input
-                  className="form-control mt-1 ml-2 my-input"
-                  type="text"
-                  placeholder="Search Coins"
-                  aria-label="Search"
-                  style={{ background: "transparent", color: "white" }}
-                />
+                <form onSubmit={searchQuery}>
+                  <input
+                    className="form-control mt-1 ml-2 my-input"
+                    type="text"
+                    placeholder="Search Coins"
+                    aria-label="Search"
+                    value={query}
+                    style={{ background: "transparent", color: "white" }}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                  <button type="submit" value="NONE" style={{ display: "none" }} />
+                </form>
               </li>
             </ul>
             {props.authenticated ? (
@@ -72,6 +83,7 @@ const Header = (props) => {
           </div>
         </nav>
       </header>
+      <hr />
     </div>
   );
 };

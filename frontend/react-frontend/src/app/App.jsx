@@ -15,6 +15,7 @@ import Profile from "../auth/profile/Profile";
 import Coin from "../components/coin/Coin";
 import Coins from "../components/coin/Coins";
 import Accounts from "../components/Accounts";
+import Search from "../components/Search";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -56,6 +57,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/coins" element={<Coins />} />
           <Route path="/coins/:id" element={<Coin authenticated={authenticated} currentUser={currentUser} />} />
+          <Route path="/search/:query" element={<Search />} />
 
           <Route path="/posts" element={<ListPost />} />
           <Route path="/create-post" element={<CreatePost />} />
@@ -63,7 +65,7 @@ function App() {
           <Route path="/delete-post/:id" element={<ListPost />} />
 
           <Route path="/Profile" element={<Profile currentUser={currentUser} />} />
-          <Route path="/Accounts" element={<Accounts currentUser={currentUser} />} />
+          <Route path="/Accounts" element={<Accounts />} />
           <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         </Routes>
       </div>

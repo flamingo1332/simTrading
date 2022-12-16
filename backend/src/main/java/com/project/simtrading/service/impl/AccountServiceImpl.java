@@ -8,6 +8,7 @@ import com.project.simtrading.entity.SellOrder;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.BadRequestException;
 import com.project.simtrading.exception.ResourceNotFoundException;
+import com.project.simtrading.payload.AccountRequest;
 import com.project.simtrading.repo.AccountRepository;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.AccountService;
@@ -24,16 +25,22 @@ public class AccountServiceImpl implements AccountService {
     private UserRepository userRepository;
 
     @Override
-    public Account createAccount(long id, double initialBalance, String name, String description) {
+    public Account createAccount(long id, AccountRequest request) {
         User user = userRepository.findById(id).orElseThrow(() ->
             new ResourceNotFoundException("user", "id", id));
 
+//        if(user.getAccounts().size() >= 5){
+//            throw new BadRequestException("You can't have more than 5 Accounts.");
+//        } else if(request.getBalance() < 100.00){
+//            throw new BadRequestException("Initial Balance must be over 100.");
+//        }
+
         Account account = new Account();
-        account.setBalance(initialBalance);
-        account.setTotal(initialBalance);
-        account.setInitialBalance(initialBalance);
-        account.setName(name);
-        account.setDescription(description);
+        account.setBalance(request.getBalance());
+        account.setTotal(request.getBalance());
+        account.setInitialBalance(request.getBalance());
+        account.setName(request.getName());
+        account.setDescription(request.getDescription());
         account.setBuyOrders(new ArrayList<>());
         account.setSellOrders(new ArrayList<>());
         account.setCoins(new HashMap<>());

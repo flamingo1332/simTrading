@@ -25,7 +25,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.github.philipinho:CoinGecko-Java:master-SNAPSHOT'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -34,6 +33,8 @@ dependencies {
 // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
 
+//	implementation 'com.github.philipinho:CoinGecko-Java:master-SNAPSHOT'
+	implementation 'com.github.flamingo1332:CoinGecko-Java:master-SNAPSHOT' //search endpoint용
 
 	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
 

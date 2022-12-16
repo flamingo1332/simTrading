@@ -4,23 +4,16 @@ import com.project.simtrading.entity.Post;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
 import com.project.simtrading.payload.PostRequest;
-import com.project.simtrading.payload.PostResponse;
-import com.project.simtrading.payload.dto.PostDto;
+import com.project.simtrading.payload.reponseDto.PostDto;
 import com.project.simtrading.repo.PostRepository;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,33 +37,37 @@ public class PostServiceImpl implements PostService {
         post.setContent(request.getContent());
         post.setCoin(request.getCoin());
         post.setUser(loggedUser);
-        post.setLikes(new ArrayList<>());
-        post.setComments(new ArrayList<>());
 
-        return mapToDto(postRepository.save(post));
+//        post.setLikes(new ArrayList<>());
+//        post.setComments(new ArrayList<>());
+
+        Post newPost = postRepository.save(post);
+
+        System.out.println(newPost);
+        return mapToDto(newPost);
     }
 
-    @Override
-    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
-                Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-
-        Page<Post> posts = postRepository.findAll(pageable);
-
-        List<Post> postList = posts.getContent();
-
-
-        PostResponse postResponse = new PostResponse();
-        postResponse.setContent(postList);
-        postResponse.setPageNo(posts.getNumber());
-        postResponse.setPageSize(posts.getSize());
-        postResponse.setTotalElements(posts.getTotalElements());
-        postResponse.setTotalPages(posts.getTotalPages());
-        postResponse.setLast(posts.isLast());
-        return postResponse;
-    }
+//    @Override
+//    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
+//        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
+//                Sort.by(sortBy).descending();
+//
+//        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+//
+//        Page<Post> posts = postRepository.findAll(pageable);
+//
+//        List<Post> postList = posts.getContent();
+//
+//
+//        PostResponse postResponse = new PostResponse();
+//        postResponse.setContent(postList);
+//        postResponse.setPageNo(posts.getNumber());
+//        postResponse.setPageSize(posts.getSize());
+//        postResponse.setTotalElements(posts.getTotalElements());
+//        postResponse.setTotalPages(posts.getTotalPages());
+//        postResponse.setLast(posts.isLast());
+//        return postResponse;
+//    }
 
     @Override
     public List<PostDto> getPostsByCoin(String coin) {

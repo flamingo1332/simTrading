@@ -7,14 +7,16 @@ import { ACCESS_TOKEN } from "../constants";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Accounts = ({ currentUser }) => {
-  //   const [accounts, setAccounts] = useState(useAxios("/api/accounts/update"));
+const Accounts = () => {
+  const [accounts, setAccounts] = useState([]);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [balance, setBalance] = useState("");
+  const [balance, setBalance] = useState(0);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getAccounts();
+  }, []);
 
   const getAccounts = () => {
     axios
@@ -22,7 +24,7 @@ const Accounts = ({ currentUser }) => {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
-        // setAccounts(res.data);
+        setAccounts(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -30,20 +32,29 @@ const Accounts = ({ currentUser }) => {
   };
 
   const createAccount = (e) => {
-    const account = { name, description, balance };
+    e.preventDefault();
 
+    console.log({ name, description, balance: Number(balance) });
     axios
-      .post(API_BASE_URL + `/api/accounts`, account, {
-        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+      .post(
+        API_BASE_URL + `/api/accounts`,
+        { name, description, balance: Number(balance) },
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        getAccounts();
+        toast("Account created!");
       })
       .catch((err) => {
         console.log(err);
+        toast(err.response.data);
       });
-
-    toast("Account created");
   };
 
-  if (currentUser)
+  if (accounts)
     return (
       <div className="container mt-5 mb-5">
         <ol className="list-group list-group-numbered">
@@ -62,6 +73,8 @@ const Accounts = ({ currentUser }) => {
                     className="form-control"
                     value={balance}
                     min="100"
+                    placeholder="100 or higher"
+                    step="1"
                     onChange={(e) => setBalance(e.target.value)}
                   />
                 </div>
@@ -84,15 +97,17 @@ const Accounts = ({ currentUser }) => {
             </form>
           </li>
 
-          {currentUser.accounts &&
-            currentUser.accounts.map((acc) => (
+          {accounts &&
+            accounts.map((acc) => (
               <li key={acc.id} className="list-group-item d-flex justify-content-between align-items-start">
                 <Link>
                   <div className="ms-2 me-auto">
+                    <div className="fw-bold">Account Id: {acc.id}</div>
                     <div className="fw-bold">Account Name: {acc.name}</div>
                     <div className="fw-bold">Description: {acc.description}</div>
-                    <div className="fw-bold">Balance: {acc.balance}</div>
-                    <div className="fw-bold">Total: {acc.total}</div>
+                    <div className="fw-bold">
+                      Balance: {acc.balance}, Total: {acc.total}
+                    </div>
                   </div>
                 </Link>
                 <span className="badge bg-primary rounded-pill"></span>

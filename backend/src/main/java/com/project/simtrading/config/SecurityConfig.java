@@ -30,9 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
+        securedEnabled = true
 )
 public class SecurityConfig {
 
@@ -94,7 +92,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/**", "/api/v1/auth/**", "/api/users/**", "/api/posts/**").permitAll()
+                        .antMatchers("/**").permitAll()
                         .antMatchers("/v2/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
@@ -124,6 +122,7 @@ public class SecurityConfig {
 //    protected AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authconfig) throws Exception {
 //        return authconfig.getAuthenticationManager();
 //    }
+
     @Bean
     protected AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)

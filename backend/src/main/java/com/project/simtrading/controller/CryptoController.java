@@ -9,6 +9,7 @@ import com.litesoftwares.coingecko.CoinGeckoApiClient;
 import com.litesoftwares.coingecko.domain.Coins.CoinFullData;
 import com.litesoftwares.coingecko.domain.Coins.CoinMarkets;
 import com.litesoftwares.coingecko.domain.Coins.MarketChart;
+import com.litesoftwares.coingecko.domain.Search.Search;
 import com.litesoftwares.coingecko.domain.Search.Trending;
 import com.litesoftwares.coingecko.impl.CoinGeckoApiClientImpl;
 import io.swagger.models.Response;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.directory.SearchResult;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +80,11 @@ public class CryptoController {
                                                     @RequestParam(name = "days", defaultValue = "30") int days,
                                                     @RequestParam(name = "interval", defaultValue = "daily") String interval){
         return ResponseEntity.ok(client.getCoinMarketChartById(id, vsCurrency, days, interval));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Search> getMarketChart(@RequestParam(name = "query") String query){
+        return ResponseEntity.ok(client.getSearchResult(query));
     }
 
     @GetMapping("/{id}/ohlc")

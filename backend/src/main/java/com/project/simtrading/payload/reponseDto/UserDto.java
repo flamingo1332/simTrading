@@ -1,14 +1,10 @@
-package com.project.simtrading.payload.dto;
+package com.project.simtrading.payload.reponseDto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.simtrading.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 
 @Data

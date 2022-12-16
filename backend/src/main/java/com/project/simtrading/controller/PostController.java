@@ -1,12 +1,10 @@
 package com.project.simtrading.controller;
 
-import com.project.simtrading.entity.Post;
 import com.project.simtrading.payload.PostRequest;
-import com.project.simtrading.payload.dto.PostDto;
+import com.project.simtrading.payload.reponseDto.PostDto;
 import com.project.simtrading.security.CustomUserDetails;
 import com.project.simtrading.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +21,8 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostRequest request,
-                                              @AuthenticationPrincipal CustomUserDetails customUserDetails
-//                                           @PathVariable long userId
-                                           ){
-        return new ResponseEntity<>(postService.createPost(request, customUserDetails.getId()), HttpStatus.CREATED);
+                                              @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return ResponseEntity.ok(postService.createPost(request, customUserDetails.getId()));
     }
 
 //    @GetMapping("/test")

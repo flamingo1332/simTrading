@@ -5,18 +5,13 @@ import com.project.simtrading.entity.Post;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
 import com.project.simtrading.payload.CommentRequest;
-import com.project.simtrading.payload.CommentResponse;
-import com.project.simtrading.payload.dto.CommentDto;
+import com.project.simtrading.payload.reponseDto.CommentDto;
 import com.project.simtrading.repo.CommentRepository;
 import com.project.simtrading.repo.PostRepository;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,25 +46,27 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponse getCommentsByPostId(long postId, int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
-                Sort.by(sortBy).descending();
+    public List<CommentDto> getCommentsByPostId(long postId) {
+//        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
+//                Sort.by(sortBy).descending();
+//
+//        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+//
+//        Page<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
+//
+//        List<Comment> commentList = comments.getContent();
+//        List<CommentDto> commentDtoList = commentList.stream().map(c -> mapToDto(c)).collect(Collectors.toList());
+//
+//        CommentResponse commentResponse = new CommentResponse();
+//        commentResponse.setContent(commentDtoList);
+//        commentResponse.setPageNo(comments.getNumber());
+//        commentResponse.setPageSize(comments.getSize());
+//        commentResponse.setTotalElements(comments.getTotalElements());
+//        commentResponse.setTotalPages(comments.getTotalPages());
+//        commentResponse.setLast(comments.isLast());
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-
-        Page<Comment> comments = commentRepository.findAllByPostId(postId, pageable);
-
-        List<Comment> commentList = comments.getContent();
-        List<CommentDto> commentDtoList = commentList.stream().map(c -> mapToDto(c)).collect(Collectors.toList());
-
-        CommentResponse commentResponse = new CommentResponse();
-        commentResponse.setContent(commentDtoList);
-        commentResponse.setPageNo(comments.getNumber());
-        commentResponse.setPageSize(comments.getSize());
-        commentResponse.setTotalElements(comments.getTotalElements());
-        commentResponse.setTotalPages(comments.getTotalPages());
-        commentResponse.setLast(comments.isLast());
-        return commentResponse;
+        List<Comment> commentList = commentRepository.findAllByPostId(postId);
+        return commentList.stream().map(comment -> mapToDto(comment)).collect(Collectors.toList());
     }
 
     @Override

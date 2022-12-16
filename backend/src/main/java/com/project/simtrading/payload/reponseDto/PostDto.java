@@ -1,14 +1,10 @@
-package com.project.simtrading.payload.dto;
+package com.project.simtrading.payload.reponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +17,7 @@ public class PostDto {
 
     private LocalDateTime dateCreated;
     private LocalDateTime dateUpdated;
-    private List<CommentDto> comments;
+//    private List<CommentDto> comments;
 
     private UserDto user;
 }

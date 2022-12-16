@@ -52,7 +52,6 @@ public class User {
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Size(max=10)
     private List<Account>  accounts;
 
     @CreationTimestamp

@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import BuyOrSell from "./BuyOrSell";
 import useAxios from "../../hooks/useAxios";
 
-const CoinDetail = ({ authenticated, currentUser }) => {
+const CoinDetail = () => {
   const { id } = useParams();
   const { response, loading } = useAxios(
     `/api/crypto/${id}?localization=false&tickers=false&market_data=true&community_data=false&sparkline=false`
@@ -12,20 +12,12 @@ const CoinDetail = ({ authenticated, currentUser }) => {
   else if (response)
     return (
       <div className="container my-6">
-        <hr />
-        {authenticated ? (
-          <BuyOrSell accounts={currentUser.accounts} coin={response} />
-        ) : (
-          <div>You must be logged in to buy/sell coins.</div>
-        )}
-
         <div className="flex gap-2 items-center">
           <h1 className="text-2xl mb-2 capitalize font-bold">
             <img className="mr-2" src={response.image.small} alt={response.name} />
             {response.name}
           </h1>
         </div>
-        <p>Description: {response.description.en}</p>
         <ul>
           <li>Current Price:${response.market_data.current_price.usd}</li>
           <li>Market Cap: ${response.market_data.market_cap.usd}</li>
@@ -56,6 +48,9 @@ const CoinDetail = ({ authenticated, currentUser }) => {
           <li>Total Supply: {response.market_data.total_supply}</li>
           <li>Circulating Supply: {response.market_data.circulating_supply}</li>
         </ul>
+
+        <p>Description: {response.description.en}</p>
+
         <hr />
       </div>
     );

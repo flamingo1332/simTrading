@@ -2,13 +2,14 @@ package com.project.simtrading.service;
 
 
 import com.project.simtrading.payload.CommentRequest;
-import com.project.simtrading.payload.CommentResponse;
-import com.project.simtrading.payload.dto.CommentDto;
+import com.project.simtrading.payload.reponseDto.CommentDto;
+
+import java.util.List;
 
 public interface CommentService {
 
     CommentDto createComment(CommentRequest request, long postId, long commenterId);
-    CommentResponse getCommentsByPostId(long postId, int pageNo, int pageSize, String sortBy, String sortDir);
+    List<CommentDto> getCommentsByPostId(long postId);
     CommentDto updateComment(CommentDto commentDto, long id);
     void deleteComment(long id);
 }

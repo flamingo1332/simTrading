@@ -6,26 +6,29 @@ import { API_BASE_URL } from "../../constants";
 import { ACCESS_TOKEN } from "../../constants";
 import { useEffect } from "react";
 import useAxios from "../../hooks/useAxios";
+import { toast } from "react-toastify";
 
-const Comments = ({ currentUser, comments, postId }) => {
+const Comments = ({ postId }) => {
   const [body, setBody] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    // getComments();
+    getComments();
   }, []);
 
-  // const getComments = () => {
-  //   axios
-  //     .get(API_BASE_URL + `/api/posts/${postId}/comments`, {
-  //       headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
-  //     })
-  //     .then((res) => {
-  //       setComments(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  const getComments = () => {
+    axios
+      .get(API_BASE_URL + `/api/posts/${postId}/comments`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setComments(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const [currentPage, setCurrentPage] = useState(0);
   const PER_PAGE = 5;
@@ -49,11 +52,19 @@ const Comments = ({ currentUser, comments, postId }) => {
   };
 
   const createComment = (e) => {
-    const comment = { body };
+    e.preventDefault(); // post request다음에 페이지 refresh안되게
 
     axios
-      .post(API_BASE_URL + `/api/posts/${postId}/comments`, comment, {
-        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+      .post(
+        API_BASE_URL + `/api/posts/${postId}/comments`,
+        { body },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
+        }
+      )
+      .then(() => {
+        getComments();
+        toast("comment created!");
       })
       .catch((err) => {
         console.log(err);
@@ -66,8 +77,13 @@ const Comments = ({ currentUser, comments, postId }) => {
         <div>
           {currentPageData}
           <ReactPaginate
-            previousLabel={"← Previous"}
-            nextLabel={"Next →"}
+            previousClassName="page-link mt-1"
+            nextClassName="page-link mt-1"
+            breakLabel="..."
+            pageLinkClassName="page-link mt-1"
+            pageClassName="page"
+            previousLabel="&laquo;"
+            nextLabel="&raquo;"
             pageCount={pageCount}
             onPageChange={handlePageClick}
             containerClassName={"pagination"}
@@ -81,11 +97,8 @@ const Comments = ({ currentUser, comments, postId }) => {
         <div></div>
       )}
 
-      <form onSubmit={createComment}>
-        <div className="input-group mb-3">
-          <button className="input-group-text" id="inputGroup-sizing-default" type="submit">
-            comment
-          </button>
+      <form onSubmit={(e) => createComment(e)}>
+        <div className="input-group mb-3 ">
           <input
             type="text"
             className="form-control"
@@ -94,6 +107,9 @@ const Comments = ({ currentUser, comments, postId }) => {
             value={body}
             onChange={(e) => setBody(e.target.value)}
           />
+          <button className=" btn btn-dark" id="inputGroup-sizing-default" style={{ height: "35px" }} type="submit">
+            comment
+          </button>
         </div>
       </form>
     </div>
