@@ -16,6 +16,8 @@ import Coin from "../components/coin/Coin";
 import Coins from "../components/coin/Coins";
 import Accounts from "../components/Accounts";
 import Search from "../components/Search";
+import axios from "axios";
+import { API_BASE_URL } from "../constants";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -36,17 +38,32 @@ function App() {
       });
   };
 
+  const deleteAccount = () => {
+    axios
+      .delete(API_BASE_URL + `/api/user`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+      })
+      .then((res) => {
+        console.log(res.data);
+        localStorage.removeItem(ACCESS_TOKEN);
+        setCurrentUser(null);
+        setAuthenticated(false);
+        toast(`Account ${currentUser.email} Deleted!`);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast(err.response.data);
+      });
+  };
   //profile 페이지에서 로그아웃하면 에러발생
   const handleLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN);
     setCurrentUser(null);
     setAuthenticated(false);
-    toast
-      .success("Safely logged out!")
-
-      .catch((error) => {
-        console.log(error);
-      });
+    toast("Safely logged out!");
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   };
 
   return (
@@ -64,7 +81,7 @@ function App() {
           <Route path="/edit-post/:id" element={<CreatePost />} />
           <Route path="/delete-post/:id" element={<ListPost />} />
 
-          <Route path="/Profile" element={<Profile currentUser={currentUser} />} />
+          <Route path="/Profile" element={<Profile currentUser={currentUser} deleteAccount={deleteAccount} />} />
           <Route path="/Accounts" element={<Accounts />} />
           <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         </Routes>

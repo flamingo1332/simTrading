@@ -14,7 +14,7 @@ body {
 .forum-post-container .media {
   margin: 10px 10px 10px 10px;
   padding: 20px 10px 20px 10px;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 2px solid #f1f1f1;
 }
 .forum-avatar {
   float: left;
@@ -35,12 +35,12 @@ body {
 .forum-post-info {
   padding: 9px 12px 6px 12px;
   background: #f9f9f9;
-  border: 1px solid #f1f1f1;
+  border: 2px solid #f1f1f1;
 }
 .media-body > .media {
   background: #f9f9f9;
   border-radius: 3px;
-  border: 1px solid #f1f1f1;
+  border: 2px solid #f1f1f1;
 }
 .forum-post-container .media-body .photos {
   margin: 10px 0;

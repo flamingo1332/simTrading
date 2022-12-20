@@ -63,6 +63,11 @@ public class CryptoController {
                 perPage, page, false, "24"));
     }
 
+    @GetMapping("/{id}/price")
+    public ResponseEntity<?> getPrice(@PathVariable(name = "id") String id){
+        return ResponseEntity.ok(client.getPrice(id, "usd"));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<CoinFullData> getCoinId(@PathVariable(name = "id") String id,

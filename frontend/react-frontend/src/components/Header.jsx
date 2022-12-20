@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react
 import { toast } from "react-toastify";
 import googleLogo from "../img/google-logo.png";
 import { GOOGLE_AUTH_URL } from "../constants";
-import "./Headers.css";
+import "./Header.css";
 import { useState } from "react";
 
 const Header = (props) => {
@@ -23,7 +23,7 @@ const Header = (props) => {
     <div className="container ">
       <header>
         <nav className="navbar navbar-expand-lg navbar-light bg-light bg-dark rounded shadow">
-          <Link to={"/"} className="navbar-brand text-light">
+          <Link to={"/"} className="navbar-brand text-light" style={{ fontSize: "1.5rem" }}>
             SimTrading
           </Link>
           <div className="collapse navbar-collapse " id="navbarSupportedContent">

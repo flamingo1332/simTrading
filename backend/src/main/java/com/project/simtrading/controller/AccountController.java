@@ -75,9 +75,12 @@ public class AccountController {
     @PostMapping("/{accountId}/buy")
     public ResponseEntity<Account> buyCoin(@PathVariable long accountId,
                                            @RequestParam(name = "coin") String coin,
-                                           @RequestParam(name = "amount") double amount,
-                                           @RequestParam(name = "price") double price){
-        return ResponseEntity.ok(accountService.buyCoin(accountId, coin, amount, price));
+                                           @RequestParam(name = "amount") String amount,
+                                           @RequestParam(name = "price") String price){
+
+
+        return ResponseEntity.ok(accountService.buyCoin(accountId, coin,
+                Double.parseDouble(amount), Double.parseDouble(price)));
     }
 
     @PostMapping("/{accountId}/sell")
@@ -85,6 +88,8 @@ public class AccountController {
                                             @RequestParam(name = "coin") String coin,
                                             @RequestParam(name = "amount") double amount,
                                             @RequestParam(name = "price") double price){
+
+
         return ResponseEntity.ok(accountService.sellCoin(accountId, coin, amount, price));
     }
 

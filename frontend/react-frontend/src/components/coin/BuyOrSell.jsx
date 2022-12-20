@@ -5,41 +5,102 @@ import { useParams } from "react-router-dom";
 import useAxios from "../../hooks/useAxios";
 import { API_BASE_URL } from "../../constants";
 import { ACCESS_TOKEN } from "../../constants";
+import { toast } from "react-toastify";
 
-const BuyOrSell = ({ accounts }) => {
+const BuyOrSell = () => {
   const { id } = useParams();
-  const [account, setAccount] = useState(accounts[0]);
+  const [accountId, setAccountId] = useState(0);
+  const [accounts, setAccounts] = useState([]);
+
   const [buy, setBuy] = useState(0);
   const [sell, setSell] = useState(0);
   const [price, setPrice] = useState(0);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getAccounts();
+    console.log(accounts);
+  }, []);
 
-  const handleChange = (e) => {
-    setAccount(accounts[e.target.value]);
-    console.log(account.coins[id]);
-  };
+  useEffect(() => {
+    //update price every min
+    getPrice();
+    const interval = setInterval(getPrice, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const buyCoin = () => {
+  const getAccounts = () => {
     axios
-      .get(API_BASE_URL + `/api/accounts/${account.id}/buy?coin=${id}&amount=${buy}&price={}`, {
+      .get(API_BASE_URL + `/api/accounts`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
-        console.log(res.data);
+        setAccounts(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  const getPrice = async () => {
+    // price update every
+    const result = await axios.get(API_BASE_URL + `/api/crypto/${id}/price`, {
+      headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+    });
 
-  const sellCoin = () => {};
+    console.log("fetch price");
+
+    setPrice(result.data[id]["usd"]);
+  };
+
+  const selectAccount = (e) => {
+    setAccountId(e.target.value);
+    console.log(accountId);
+  };
+
+  const buyCoin = () => {
+    if (buy * price > accounts[accountId].balance) {
+      toast("Not enough balance");
+    } else {
+      axios
+        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/buy?coin=${id}&amount=${buy}&price=${price}`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+        })
+        .then((res) => {
+          console.log(res.data);
+          toast(`${buy} ${id} bought to your account(id: ${accounts[accountId].id})`);
+          getAccounts();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const sellCoin = () => {
+    const coinBalance = accounts[accountId].coins[id] ? accounts[accountId].coins[id] : 0;
+    if (sell > coinBalance) {
+      toast("You can't sell more than you have.");
+    } else {
+      axios
+        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/sell?coin=${id}&amount=${sell}&price=${price}`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+        })
+        .then((res) => {
+          console.log(res.data);
+          toast(`${sell} ${id} sold from your account(id: ${accounts[accountId].id})`);
+          getAccounts();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
-    <div className="">
+    <div className="container">
       <h2>Buy/Sell</h2>
       {accounts.length !== 0 ? (
         <div>
-          <select className="form-select mb-3 mt-3" aria-label="Default select example" onChange={handleChange}>
+          <select className="form-select mb-3 mt-3" aria-label="Default select example" onChange={selectAccount}>
             <optgroup label="Select Account"></optgroup>
             {accounts.map((account, index) => (
               <option key={account.id} value={index}>
@@ -47,22 +108,28 @@ const BuyOrSell = ({ accounts }) => {
               </option>
             ))}
           </select>
-          <span>&nbsp;&nbsp; Account Balance : ${account.balance}</span>
-          {/* <span>&nbsp;&nbsp; Coin Balance :{account.balance.coins === undefined ? 0 : account.balance.coins[id]}</span> */}
-          <form>
-            <button className="btn btn-sm btn-primary mr-3" type="submit" value={buy} onChange={(e) => setBuy(e)}>
+          <span>&nbsp;&nbsp; Account Balance : ${accounts[accountId].balance}</span>
+          <span>
+            &nbsp;&nbsp;/ {id.toUpperCase()} Balance :{" "}
+            {accounts[accountId].coins[id] ? accounts[accountId].coins[id] : 0}
+          </span>
+          <span>&nbsp;&nbsp;/ Current Price : ${price}</span>
+          <div>
+            <button className="btn btn-sm btn-primary mr-3" type="submit" value={buy} onClick={buyCoin}>
               Buy :{" "}
             </button>
-            <input type="number" value={buy} onChange={(e) => setBuy(e.target.value)} />
+            <input type="number" value={buy} onChange={(e) => setBuy(e.target.value)} min="0" />
+            &nbsp; Total: ${buy * price}
             <br />
-            <button className="btn btn-sm btn-primary mr-3" type="submit" value={sell} onChange={(e) => setSell(e)}>
+            <button className="btn btn-sm btn-primary mr-3" type="submit" value={sell} onClick={sellCoin}>
               Sell :{" "}
             </button>
-            <input type="number" value={sell} onChange={(e) => setSell(e.target.value)} />
-          </form>
+            <input type="number" value={sell} onChange={(e) => setSell(e.target.value)} min="0" />
+            &nbsp; Total: ${sell * price}
+          </div>
         </div>
       ) : (
-        <div className="mb-3 mt-3">You need an account. You can make accounts in profile page.</div>
+        <div className="mb-3 mt-3">You need an account. You can make accounts in Accounts page.</div>
       )}
 
       <hr />

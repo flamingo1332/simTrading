@@ -8,11 +8,7 @@ const Coin = ({ authenticated, currentUser }) => {
   return (
     <div className="container mt-10">
       <HistoryChart />
-      {authenticated ? (
-        <BuyOrSell accounts={currentUser.accounts} />
-      ) : (
-        <div>You must be logged in to buy/sell coins.</div>
-      )}
+      {authenticated ? <BuyOrSell /> : <div>You must be logged in to buy/sell coins.</div>}
       <CoinDetail />
       <CoinNews />
       <Posts currentUser={currentUser} />

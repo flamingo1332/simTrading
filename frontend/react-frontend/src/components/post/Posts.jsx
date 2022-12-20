@@ -9,12 +9,14 @@ import ReactPaginate from "react-paginate";
 import "./Posts.css";
 import Comments from "./Comments";
 
-const Posts = () => {
+const Posts = ({ currentUser }) => {
   //   const [accounts, setAccounts] = useState(useAxios("/api/accounts/update"));
 
   const { id } = useParams();
   const [posts, setPosts] = useState([]);
   const [content, setContent] = useState("");
+  const [isEdit, setIsEdit] = useState([]);
+  const [edit, setEdit] = useState("");
 
   useEffect(() => {
     getPosts();
@@ -28,6 +30,22 @@ const Posts = () => {
       .then((res) => {
         console.log(res.data);
         setPosts(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setIsEdit(Array(posts.length).fill(false));
+  };
+
+  const deletePost = (e) => {
+    axios
+      .delete(API_BASE_URL + `/api/posts/${e.target.value}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
+      })
+      .then(() => {
+        getPosts();
+        toast("comment deleted!");
       })
       .catch((err) => {
         console.log(err);
@@ -56,18 +74,48 @@ const Posts = () => {
       });
   };
 
+  const editPost = (e) => {
+    e.preventDefault(); // post request다음에 페이지 refresh안되게
+
+    console.log(e);
+    axios
+      .put(
+        API_BASE_URL + `/api/posts/${e.target[1].value}`, //index아니라 postId사용
+        { content: edit, coin: id },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
+        }
+      )
+      .then(() => {
+        getPosts();
+        toast("comment edited!");
+        setIsEdit(Array(posts.length).fill(false));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const openEdit = (e) => {
+    //index사용해 edit 상태조절
+    const arr = Array(posts.length).fill(false);
+    if (isEdit[e.target.value]) arr[e.target.value] = false;
+    else arr[e.target.value] = true;
+
+    setIsEdit(arr);
+    setEdit(posts[e.target.value].content); //for prepopulating input field
+  };
+
   const [currentPage, setCurrentPage] = useState(0);
-  const PER_PAGE = 5;
+  const PER_PAGE = 10;
   const offset = currentPage * PER_PAGE;
-  const currentPageData = posts.slice(offset, offset + PER_PAGE).map((post) => (
+  const currentPageData = posts.slice(offset, offset + PER_PAGE).map((post, index) => (
     <div className="container" key={post.id}>
       <div className="row">
         <div className="media comment-box">
           <div className="media-left">
             {post.user.imageUrl ? (
-              <div>
-                <img className="img-responsive user-photo" src={post.user.imageUrl} />
-              </div>
+              <img className="img-responsive user-photo" src={post.user.imageUrl} />
             ) : (
               <img className="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" />
             )}
@@ -76,9 +124,38 @@ const Posts = () => {
           <div className="media-body">
             <h5 className="media-heading">
               {post.user.name} ({post.user.email}) {post.dateCreated}
+              {post.dateCreated !== post.dateUpdated ? <span> / edited: {post.dateUpdated}</span> : <span></span>}
+              &nbsp; &nbsp;
+              {currentUser && post.user.id === currentUser.id ? (
+                <div>
+                  <button className="btn-sm btn btn-outline-dark mr-1" value={index} onClick={(e) => openEdit(e)}>
+                    edit
+                  </button>
+                  <button className="btn-sm btn btn-outline-dark" value={post.id} onClick={(e) => deletePost(e)}>
+                    delete
+                  </button>
+                </div>
+              ) : (
+                <div></div>
+              )}
             </h5>
-            <p>{post.content}</p>
-            <Comments postId={post.id} />
+
+            {!isEdit[index] ? (
+              <p>{post.content}</p>
+            ) : (
+              <form onSubmit={editPost} value={1}>
+                <input
+                  className="form-control mb-3 my-input"
+                  type="text"
+                  value={edit}
+                  style={{ background: "", color: "black" }}
+                  onChange={(e) => setEdit(e.target.value)}
+                />
+                <input type="submit" value={post.id} style={{ display: "none" }} />
+              </form>
+            )}
+
+            <Comments postId={post.id} currentUser={currentUser} />
           </div>
         </div>
       </div>
