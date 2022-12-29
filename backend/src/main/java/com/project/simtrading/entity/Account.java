@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +26,10 @@ public class Account {
     @ElementCollection
     @Column
     private Map<String, Double> coins;
+
+    @ElementCollection
+    @Column
+    private Map<String, Double> prices;
 
     @Column
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

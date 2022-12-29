@@ -21,7 +21,8 @@ public class BuyOrder {
     private Long id;
 
     private String symbol;
-    private double Amount;
+    private double amount;
+    private double price;
     @CreationTimestamp
     private LocalDateTime date;
 

@@ -99,7 +99,7 @@ const BuyOrSell = () => {
       <h2>Buy/Sell</h2>
       {accounts.length !== 0 ? (
         <div>
-          <select className="form-select mb-3 mt-3" aria-label="Default select example" onChange={selectAccount}>
+          <select className="form-select  mt-3" aria-label="Default select example" onChange={selectAccount}>
             <optgroup label="Select Account"></optgroup>
             {accounts.map((account, index) => (
               <option key={account.id} value={index}>
@@ -107,12 +107,15 @@ const BuyOrSell = () => {
               </option>
             ))}
           </select>
-          <span>&nbsp;&nbsp; Account Balance : ${accounts[accountId].balance}</span>
-          <span>
-            &nbsp;&nbsp;/ {id.toUpperCase()} Balance :{" "}
-            {accounts[accountId].coins[id] ? accounts[accountId].coins[id] : 0}
-          </span>
-          <span>&nbsp;&nbsp;/ Current Price : ${price}</span>
+          <br />
+          Account Balance: ${accounts[accountId].balance}
+          <br />
+          {id.toUpperCase()} Balance:
+          {accounts[accountId].coins[id]
+            ? accounts[accountId].coins[id] + ` ($${accounts[accountId].coins[id] * price})`
+            : 0}
+          <br />
+          Current Price: ${price}
           <div>
             <button className="btn btn-sm btn-primary mr-3" type="submit" value={buy} onClick={buyCoin}>
               Buy :{" "}

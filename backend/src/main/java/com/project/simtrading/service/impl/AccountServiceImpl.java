@@ -71,26 +71,25 @@ public class AccountServiceImpl implements AccountService {
             for(String key : account.getCoins().keySet())
                 input += (key + ",");
 
-        System.out.println(input);
-        CoinGeckoApiClient client = new CoinGeckoApiClientImpl();
-        Map<String, Map<String, Double>> prices = client.getPrice(input, "usd");
-
-        System.out.println(prices.get("bitcoin").get("usd"));
+        Map<String, Map<String, Double>> updatedPrices = new CoinGeckoApiClientImpl().getPrice(input, "usd");
 
         for(Account account : accounts){
-            Map<String, Double> map = account.getCoins();
+            Map<String, Double> coins = account.getCoins();
+            Map<String, Double> prices = account.getCoins();
+
             Double total = account.getBalance();
 
 
-            for(String key : map.keySet())
-                total += prices.get(key).get("usd") * map.get(key);
-
+            for(String coin : coins.keySet()){
+                double p = updatedPrices.get(coins).get("usd");
+                prices.put(coin, p);
+                total += p * coins.get(coin);
+            }
 
             account.setTotal(total);
             repository.save(account);
         }
 
-        System.out.println(4);
         return user.getAccounts();
     }
 
@@ -99,15 +98,19 @@ public class AccountServiceImpl implements AccountService {
     public Account buyCoin(long id, String coin, double amount, double price) {
         Account account = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account", "id", id));
         Map<String, Double> coins = account.getCoins();
+
+
         if(amount * price > account.getBalance()) {
             throw new BadRequestException("Not enough balance");
         } else if(amount <= 0 ){
             throw new BadRequestException("invalid input");
         }
         coins.put(coin, coins.getOrDefault(coin, 0.0) + amount);
+        account.getPrices().put(coin, price);
 
         BuyOrder buyOrder = new BuyOrder();
         buyOrder.setAccount(account);
+        buyOrder.setPrice(price);
         buyOrder.setAmount(amount);
         buyOrder.setSymbol(coin);
 
@@ -120,21 +123,22 @@ public class AccountServiceImpl implements AccountService {
     public Account sellCoin(long id, String coin, double amount, double price) {
         Account account = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account", "id", id));
         Map<String, Double> coins = account.getCoins();
+
         if(!coins.containsKey(coin) || coins.get(coin) < amount) {
             throw new BadRequestException("You're selling more than you have");
         } else if(amount <= 0 ){
             throw new BadRequestException("invalid input");
         }
 
-        if(coins.get(coin) - amount == 0) {
+        if(coins.get(coin) - amount == 0){
             coins.remove(coin);
-        } else{
-            coins.put(coin, coins.get(coin) - amount);
-        }
+            account.getPrices().remove(coin);
+        } else coins.put(coin, coins.get(coin) - amount);
 
 
         SellOrder sellOrder = new SellOrder();
         sellOrder.setAccount(account);
+        sellOrder.setPrice(price);
         sellOrder.setAmount(amount);
         sellOrder.setSymbol(coin);
 

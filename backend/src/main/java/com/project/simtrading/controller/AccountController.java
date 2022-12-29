@@ -62,7 +62,6 @@ public class AccountController {
         return ResponseEntity.ok(accountService.createAccount(
                 customUserDetails.getId(), request));
     }
-
     @DeleteMapping("/{accountId}")
     public ResponseEntity<String> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                 @PathVariable long accountId){

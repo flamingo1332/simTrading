@@ -6,6 +6,7 @@ import { ACCESS_TOKEN } from "../constants";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./coin/Coins.css";
+import OAuth2RedirectHandler from "../auth/oauth2/OAuth2RedirectHandler";
 const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
 
@@ -69,10 +70,6 @@ const Accounts = () => {
       });
   };
 
-  const showDetail = () => {
-    console.log("jaha");
-  };
-
   if (accounts)
     return (
       <div className="container mt-5 mb-5">
@@ -123,16 +120,19 @@ const Accounts = () => {
               <div className="row">
                 <div className="col-md-9">
                   <div className="container ">
-                    id: {account.id} Name: {account.name} &nbsp;&nbsp; Description: {account.description} <br />
+                    id: {account.id} / Name: {account.name} / Description: {account.description} / Initial Balacne: $
+                    {account.initialBalance}
+                    <br />
                     Balance: ${account.balance} / Total: ${account.total}
                   </div>
                   <br />
+
                   <span className="forum-sub-title text-muted">-Coins</span>
 
                   {Object.keys(account.coins).map((key) => (
                     <div key={key} className="forum-sub-title text-muted">
                       <Link to={`/coins/${key}`}>
-                        {key}: {account.coins[key]}
+                        {key}: {account.coins[key]} (${account.coins[key] * account.prices[key]})
                       </Link>
                     </div>
                   ))}
@@ -140,12 +140,12 @@ const Accounts = () => {
                   <span className="forum-sub-title text-muted">-History</span>
                   {account.buyOrders.map((order) => (
                     <div key={order.id} className="forum-sub-title text-muted">
-                      {order.date} : bought {order.amount} {order.symbol}
+                      {order.date} : bought {order.amount} {order.symbol} at price ${order.price}
                     </div>
                   ))}
                   {account.sellOrders.map((order) => (
                     <div key={order.id} className="forum-sub-title text-muted">
-                      {order.date} : sold {order.amount} {order.symbol}
+                      {order.date} : sold {order.amount} {order.symbol} at price ${order.price}
                     </div>
                   ))}
                 </div>
