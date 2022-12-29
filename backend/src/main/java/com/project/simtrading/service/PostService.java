@@ -1,7 +1,7 @@
 package com.project.simtrading.service;
 
-import com.project.simtrading.payload.PostRequest;
-import com.project.simtrading.payload.reponseDto.PostDto;
+import com.project.simtrading.payload.request.PostRequest;
+import com.project.simtrading.payload.reponse.PostDto;
 
 import java.util.List;
 

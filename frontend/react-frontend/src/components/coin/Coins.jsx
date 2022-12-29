@@ -19,7 +19,7 @@ const Coins = () => {
 
   const getCoins = () => {
     axios
-      .get(API_BASE_URL + `/api/crypto/markets?ids=&per_page=100&page=${page}`, {
+      .get(API_BASE_URL + `/api/coins/markets?ids=&per_page=100&page=${page}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
@@ -96,7 +96,11 @@ const Coins = () => {
             )}
 
             <li className="page-item">
-              <button className="page-link" disabled value={page}>
+              <button
+                className="page-link btn disabled"
+                style={{ height: "2.4rem", width: "2.8rem", color: "black" }}
+                value={page}
+              >
                 {page}
               </button>
             </li>

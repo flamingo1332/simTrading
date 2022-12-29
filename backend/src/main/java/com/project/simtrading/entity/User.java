@@ -69,9 +69,6 @@ public class User {
     private List<Comment> comments;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Like> likes;
-
 //    public Boolean getEmailVerified() {
 //        return emailVerified;
 //    }

@@ -40,7 +40,6 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-
         return Jwts.builder()
                 .setSubject(Long.toString(userDetails.getId()))
                 .claim(AUTHORITIES_KEY, role)

@@ -21,7 +21,8 @@ const OAuth2RedirectHandler = () => {
       });
       navigate("/");
     } else {
-      navigate("/login", { state: { error: error } });
+      toast.failure("something went wrong. please try again.");
+      navigate("/", { state: { error: error } });
     }
   }, []);
 };

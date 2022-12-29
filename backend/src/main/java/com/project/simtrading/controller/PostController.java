@@ -1,7 +1,7 @@
 package com.project.simtrading.controller;
 
-import com.project.simtrading.payload.PostRequest;
-import com.project.simtrading.payload.reponseDto.PostDto;
+import com.project.simtrading.payload.request.PostRequest;
+import com.project.simtrading.payload.reponse.PostDto;
 import com.project.simtrading.security.CustomUserDetails;
 import com.project.simtrading.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +18,10 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostRequest request,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails){
         return ResponseEntity.ok(postService.createPost(request, customUserDetails.getId()));
-    }
-
-//    @GetMapping("/test")
-//    public ResponseEntity<List<PostDto>> getPostsTest(){
-//        return ResponseEntity.ok(postService.getAllPosts());
-//    }
-
-    @GetMapping("/{coin}")
-    public ResponseEntity<List<PostDto>> getPostsByCoin(@PathVariable(name = "coin") String coin){
-        return ResponseEntity.ok(postService.getPostsByCoin(coin));
-    }
-
-    @GetMapping("/{id}/user")
-    public ResponseEntity<PostDto> getPostById(@PathVariable long id){
-        return ResponseEntity.ok(postService.getPostById(id));
     }
 
     @PutMapping("/{id}")
@@ -50,4 +34,15 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.ok("Post successfully deleted");
     }
+
+    @GetMapping("/{coin}")
+    public ResponseEntity<List<PostDto>> getPostsByCoin(@PathVariable(name = "coin") String coin){
+        return ResponseEntity.ok(postService.getPostsByCoin(coin));
+    }
+
+    @GetMapping("/{id}/user")
+    public ResponseEntity<PostDto> getPostById(@PathVariable long id){
+        return ResponseEntity.ok(postService.getPostById(id));
+    }
+
 }

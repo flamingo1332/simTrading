@@ -14,7 +14,7 @@ const Posts = ({ currentUser }) => {
 
   const { id } = useParams();
   const [posts, setPosts] = useState([]);
-  const [content, setContent] = useState("");
+  const [body, setBody] = useState("");
   const [isEdit, setIsEdit] = useState([]);
   const [edit, setEdit] = useState("");
 
@@ -28,7 +28,6 @@ const Posts = ({ currentUser }) => {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
-        console.log(res.data);
         setPosts(res.data);
       })
       .catch((err) => {
@@ -55,12 +54,11 @@ const Posts = ({ currentUser }) => {
   //bad request나던 이유 -> view attribute 지웠는데 db테이블에는 남아있어 default value 없다고 에러남
   const createPost = (e) => {
     e.preventDefault();
-    console.log({ content, coin: id });
 
     axios
       .post(
         API_BASE_URL + "/api/posts",
-        { content, coin: id },
+        { body, coin: id },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
         }
@@ -77,11 +75,10 @@ const Posts = ({ currentUser }) => {
   const editPost = (e) => {
     e.preventDefault(); // post request다음에 페이지 refresh안되게
 
-    console.log(e);
     axios
       .put(
         API_BASE_URL + `/api/posts/${e.target[1].value}`, //index아니라 postId사용
-        { content: edit, coin: id },
+        { body: edit, coin: id },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
         }
@@ -103,7 +100,7 @@ const Posts = ({ currentUser }) => {
     else arr[e.target.value] = true;
 
     setIsEdit(arr);
-    setEdit(posts[e.target.value].content); //for prepopulating input field
+    setEdit(posts[e.target.value].body); //for prepopulating input field
   };
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -141,7 +138,7 @@ const Posts = ({ currentUser }) => {
             </h5>
 
             {!isEdit[index] ? (
-              <p>{post.content}</p>
+              <p>{post.body}</p>
             ) : (
               <form onSubmit={editPost} value={1}>
                 <input
@@ -181,8 +178,8 @@ const Posts = ({ currentUser }) => {
               placeholder="write comment here..."
               rows="3"
               cols="60"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
             />
           </div>
         </div>

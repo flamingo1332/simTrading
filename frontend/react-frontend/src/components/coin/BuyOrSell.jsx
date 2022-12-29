@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 import { API_BASE_URL } from "../../constants";
 import { ACCESS_TOKEN } from "../../constants";
 import { toast } from "react-toastify";
@@ -40,13 +40,12 @@ const BuyOrSell = () => {
         console.log(err);
       });
   };
+
   const getPrice = async () => {
     // price update every
-    const result = await axios.get(API_BASE_URL + `/api/crypto/${id}/price`, {
+    const result = await axios.get(API_BASE_URL + `/api/coins/price?id=${id}`, {
       headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
     });
-
-    console.log("fetch price");
 
     setPrice(result.data[id]["usd"]);
   };

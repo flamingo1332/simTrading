@@ -3,7 +3,7 @@ package com.project.simtrading.controller;
 import com.project.simtrading.entity.Account;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
-import com.project.simtrading.payload.AccountRequest;
+import com.project.simtrading.payload.request.AccountRequest;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.security.CustomUserDetails;
 import com.project.simtrading.service.AccountService;
@@ -11,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingErrorProcessor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,6 +25,7 @@ public class AccountController {
     private AccountService accountService;
     @Autowired
     private UserRepository userRepository;
+
 
 
     @GetMapping
@@ -42,6 +41,7 @@ public class AccountController {
         System.out.println(customUserDetails.getId());
         return ResponseEntity.ok(accountService.getAccountByUserIdUpdated(customUserDetails.getId()));
     }
+
 
     @PostMapping
     public ResponseEntity<?> createAccount(

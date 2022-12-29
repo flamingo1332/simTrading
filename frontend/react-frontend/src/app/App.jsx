@@ -1,12 +1,9 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import ListPost from "../components/ListPost";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import CreatePost from "../components/CreatePost";
+import Header from "../components/home/Header";
+import Footer from "../components/home/Footer";
 import Home from "../components/home/Home";
-import { getCurrentUser } from "../auth/APIUtils";
 import { ACCESS_TOKEN } from "../constants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +12,7 @@ import Profile from "../auth/profile/Profile";
 import Coin from "../components/coin/Coin";
 import Coins from "../components/coin/Coins";
 import Accounts from "../components/Accounts";
-import Search from "../components/Search";
+import Search from "../components/coin/Search";
 import axios from "axios";
 import { API_BASE_URL } from "../constants";
 
@@ -28,9 +25,12 @@ function App() {
   }, []);
 
   const loadCurrentlyLoggedInUser = () => {
-    getCurrentUser()
+    axios
+      .get(API_BASE_URL + `/api/user`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
+      })
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         setAuthenticated(true);
       })
       .catch((error) => {
@@ -40,11 +40,10 @@ function App() {
 
   const deleteAccount = () => {
     axios
-      .delete(API_BASE_URL + `/api/user`, {
+      .delete(API_BASE_URL + `/api/user/${currentUser.id}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
-        console.log(res.data);
         localStorage.removeItem(ACCESS_TOKEN);
         setCurrentUser(null);
         setAuthenticated(false);
@@ -55,15 +54,12 @@ function App() {
         toast(err.response.data);
       });
   };
-  //profile 페이지에서 로그아웃하면 에러발생
+
   const handleLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN);
     setCurrentUser(null);
     setAuthenticated(false);
     toast("Safely logged out!");
-    // .catch((error) => {
-    //   console.log(error);
-    // });
   };
 
   return (
@@ -75,11 +71,6 @@ function App() {
           <Route path="/coins" element={<Coins />} />
           <Route path="/coins/:id" element={<Coin authenticated={authenticated} currentUser={currentUser} />} />
           <Route path="/search/:query" element={<Search />} />
-
-          <Route path="/posts" element={<ListPost />} />
-          <Route path="/create-post" element={<CreatePost />} />
-          <Route path="/edit-post/:id" element={<CreatePost />} />
-          <Route path="/delete-post/:id" element={<ListPost />} />
 
           <Route path="/Profile" element={<Profile currentUser={currentUser} deleteAccount={deleteAccount} />} />
           <Route path="/Accounts" element={<Accounts />} />

@@ -1,8 +1,8 @@
 package com.project.simtrading.service;
 
 
-import com.project.simtrading.payload.CommentRequest;
-import com.project.simtrading.payload.reponseDto.CommentDto;
+import com.project.simtrading.payload.request.CommentRequest;
+import com.project.simtrading.payload.reponse.CommentDto;
 
 import java.util.List;
 

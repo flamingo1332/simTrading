@@ -5,7 +5,7 @@ import com.project.simtrading.entity.common.AuthProvider;
 import com.project.simtrading.entity.common.Role;
 import com.project.simtrading.exception.BadRequestException;
 import com.project.simtrading.exception.ResourceNotFoundException;
-import com.project.simtrading.payload.SignUpRequest;
+import com.project.simtrading.payload.request.SignUpRequest;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +39,12 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return repository.save(user);
+    }
+
+    @Override
+    public void deleteUserById(long id) {
+        User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id));
+        repository.delete(user);
+
     }
 }

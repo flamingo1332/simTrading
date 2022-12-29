@@ -3,8 +3,8 @@ package com.project.simtrading.service.impl;
 import com.project.simtrading.entity.Post;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.ResourceNotFoundException;
-import com.project.simtrading.payload.PostRequest;
-import com.project.simtrading.payload.reponseDto.PostDto;
+import com.project.simtrading.payload.request.PostRequest;
+import com.project.simtrading.payload.reponse.PostDto;
 import com.project.simtrading.repo.PostRepository;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.PostService;
@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
                 -> new ResourceNotFoundException("User", "id", id));
 
         Post post = new Post();
-        post.setContent(request.getContent());
+        post.setBody(request.getBody());
         post.setCoin(request.getCoin());
         post.setUser(loggedUser);
 
@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("Post", "id", id));
 
-        post.setContent(request.getContent());
+        post.setBody(request.getBody());
         post.setDateUpdated(LocalDateTime.now());
 
         return mapToDto(postRepository.save(post));

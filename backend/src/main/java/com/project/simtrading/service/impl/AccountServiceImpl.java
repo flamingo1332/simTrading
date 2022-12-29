@@ -8,7 +8,7 @@ import com.project.simtrading.entity.SellOrder;
 import com.project.simtrading.entity.User;
 import com.project.simtrading.exception.BadRequestException;
 import com.project.simtrading.exception.ResourceNotFoundException;
-import com.project.simtrading.payload.AccountRequest;
+import com.project.simtrading.payload.request.AccountRequest;
 import com.project.simtrading.repo.AccountRepository;
 import com.project.simtrading.repo.UserRepository;
 import com.project.simtrading.service.AccountService;

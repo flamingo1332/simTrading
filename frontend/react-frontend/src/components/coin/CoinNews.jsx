@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 
 const CoinNews = () => {
   const { id } = useParams();
-  const { response, loading, error } = useAxios(`/api/crypto/${id}/news`);
+  const { response, loading, error } = useAxios(`/api/coins/news?id=${id}`);
 
   if (loading) return <div className="wrapper-container mt-8">loading...</div>;
   else if (error || !response) return <div className="wrapper-container mt-8"> News Not Found </div>;

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -29,9 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true
-)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final long MAX_AGE_SECS = 3600;
@@ -92,11 +91,23 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/**").permitAll()
+                        .antMatchers("/api/user/**").permitAll()
+                        .antMatchers("/api/coins/**").permitAll()
+                        .antMatchers("/api/accounts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+
+                        .antMatchers(HttpMethod.POST, "/api/comments/**").hasRole("USER")
+                        .antMatchers(HttpMethod.PUT, "/api/comments/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/api/comments/**").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/api/posts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.PUT, "/api/posts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/api/posts/**").hasRole("USER")
                         .antMatchers("/v2/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
-                                "/swagger-ui.html/**",
+                                "/swagger-ui.html" +
+                                        "/**",
                                 "/webjars/**").permitAll()  // swagger
                         .anyRequest().authenticated())
                 .oauth2Login()

@@ -1,7 +1,7 @@
 package com.project.simtrading.service;
 
 import com.project.simtrading.entity.Account;
-import com.project.simtrading.payload.AccountRequest;
+import com.project.simtrading.payload.request.AccountRequest;
 
 import java.util.List;
 

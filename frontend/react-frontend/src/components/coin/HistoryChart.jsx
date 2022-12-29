@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
 import { useState, useEffect } from "react";
@@ -16,7 +16,7 @@ const HistoryChart = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(API_BASE_URL + `/api/crypto/${id}/ohlc?vs_currency=usd&days=${days}`, {
+      .get(API_BASE_URL + `/api/coins/ohlc?id=${id}&vs_currency=usd&days=${days}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {

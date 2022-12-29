@@ -1,4 +1,4 @@
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 import CoinTrending from "./CoinTrending";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -6,9 +6,8 @@ import axios from "axios";
 import { ACCESS_TOKEN, API_BASE_URL } from "../../constants";
 
 const Trending = () => {
-  const { response, loading } = useAxios("/api/crypto/trending");
-  const [markets, setMarkets] = useState(null);
-  const [response2, setResponse2] = useState(null); //market data (trending coins)
+  const { response, loading } = useAxios("/api/coins/trending");
+  const [marketData, setMarketData] = useState(null); //market data (trending coins)
 
   useEffect(() => {
     if (response) {
@@ -17,11 +16,11 @@ const Trending = () => {
       });
 
       axios
-        .get(API_BASE_URL + `/api/crypto/markets?ids=${temp.toString()}&per_page=10&page=1`, {
+        .get(API_BASE_URL + `/api/coins/markets?id=${temp.toString()}&per_page=10&page=1`, {
           headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
         })
         .then((res) => {
-          setResponse2(res.data);
+          setMarketData(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -31,7 +30,7 @@ const Trending = () => {
 
   if (loading) {
     return <div className="wrapper-container mt-8">Loading...</div>;
-  } else if (response && response2)
+  } else if (response && marketData)
     return (
       <div className="mt-8">
         <h1 className="text-2xl mb-2">Top 7 Trending Coins</h1>
@@ -42,7 +41,7 @@ const Trending = () => {
                 <CoinTrending
                   key={coin.item.coin_id}
                   coin={coin.item}
-                  market={response2.find((res) => res.id === coin.item.id)}
+                  market={marketData.find((res) => res.id === coin.item.id)}
                 />
               ))}
           </div>

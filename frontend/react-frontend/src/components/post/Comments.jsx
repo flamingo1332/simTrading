@@ -5,7 +5,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../../constants";
 import { ACCESS_TOKEN } from "../../constants";
 import { useEffect } from "react";
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 import { toast } from "react-toastify";
 
 const Comments = ({ postId, currentUser }) => {
@@ -20,11 +20,10 @@ const Comments = ({ postId, currentUser }) => {
 
   const getComments = () => {
     axios
-      .get(API_BASE_URL + `/api/posts/${postId}/comments`, {
+      .get(API_BASE_URL + `/api/comments/${postId}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
-        console.log(res.data);
         setComments(res.data);
       })
       .catch((err) => {
@@ -53,7 +52,7 @@ const Comments = ({ postId, currentUser }) => {
 
     axios
       .post(
-        API_BASE_URL + `/api/posts/${postId}/comments`,
+        API_BASE_URL + `/api/comments/${postId}`,
         { body },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
@@ -71,7 +70,6 @@ const Comments = ({ postId, currentUser }) => {
   const editComment = (e) => {
     e.preventDefault(); // post request다음에 페이지 refresh안되게
 
-    console.log(e);
     axios
       .put(
         API_BASE_URL + `/api/comments/${e.target[1].value}`,

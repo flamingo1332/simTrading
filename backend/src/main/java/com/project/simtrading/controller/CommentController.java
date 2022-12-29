@@ -1,7 +1,7 @@
 package com.project.simtrading.controller;
 
-import com.project.simtrading.payload.CommentRequest;
-import com.project.simtrading.payload.reponseDto.CommentDto;
+import com.project.simtrading.payload.request.CommentRequest;
+import com.project.simtrading.payload.reponse.CommentDto;
 import com.project.simtrading.security.CustomUserDetails;
 import com.project.simtrading.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-
-
-    @GetMapping("/posts/{postId}/comments")
-    public List<CommentDto> getCommentsByPostId(@PathVariable(name = "postId") long postId) {
-        return commentService.getCommentsByPostId(postId);
-    }
-
-    @PostMapping("/posts/{postId}/comments")
+    @PostMapping("/comments/{postId}")
     public ResponseEntity<CommentDto> createComment(@PathVariable(name = "postId") long postId,
                                                     @Valid @RequestBody CommentRequest request,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -43,6 +36,13 @@ public class CommentController {
         commentService.deleteComment(id);
         return ResponseEntity.ok("Comment successfully deleted");
     }
+
+
+    @GetMapping("/comments/{postId}")
+    public List<CommentDto> getCommentsByPostId(@PathVariable(name = "postId") long postId) {
+        return commentService.getCommentsByPostId(postId);
+    }
+
 
 
 }

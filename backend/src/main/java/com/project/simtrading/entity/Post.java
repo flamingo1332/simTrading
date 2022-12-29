@@ -23,7 +23,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "posts")
-
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +31,8 @@ public class Post {
     // should not be null
     // at least ~ char
 
-    @Column(name = "content")
-    private String content;
+    @Column
+    private String body;
 
     @Column
     private String coin;
@@ -55,8 +54,7 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Like> likes;
+
 
 
 }

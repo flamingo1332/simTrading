@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import BuyOrSell from "./BuyOrSell";
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 
 const CoinDetail = () => {
   const { id } = useParams();
   const { response, loading } = useAxios(
-    `/api/crypto/${id}?localization=false&tickers=false&market_data=true&community_data=false&sparkline=false`
+    `/api/coins/data?id=${id}&localization=false&tickers=false&market_data=true&community_data=false&sparkline=false`
   );
 
   if (loading) return <div className="wrapper-container mt-8">loading...</div>;

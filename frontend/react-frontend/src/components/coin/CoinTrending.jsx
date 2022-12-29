@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import useAxios from "../../hooks/useAxios";
+import useAxios from "../../utils/useAxios";
 import { useEffect, useState } from "react";
 const CoinTrending = ({ coin, market }) => {
   return (
