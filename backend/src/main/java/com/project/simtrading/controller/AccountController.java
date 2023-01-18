@@ -32,7 +32,7 @@ public class AccountController {
     public ResponseEntity<List<Account>> getAccountsByUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         System.out.println("getAccountsByUserId");
         System.out.println(customUserDetails.getId());
-        return ResponseEntity.ok(accountService.getAccountByUserId(customUserDetails.getId()));
+        return ResponseEntity.ok(accountService.getAccountByUserIdUpdated(customUserDetails.getId()));
     }
 
     @GetMapping("/update")

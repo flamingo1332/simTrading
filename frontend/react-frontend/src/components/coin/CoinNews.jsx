@@ -1,19 +1,41 @@
 import { useParams } from "react-router-dom";
-import useAxios from "../../utils/useAxios";
+import { useEffect } from "react";
+import { useState } from "react";
+import { API_BASE_URL } from "../../constants";
+import axios from "axios";
+import { ACCESS_TOKEN } from "../../constants";
 
 const CoinNews = () => {
   const { id } = useParams();
-  const { response, loading, error } = useAxios(`/api/coins/news?id=${id}`);
+  const [news, setNews] = useState(null);
+  const headers = localStorage.getItem(ACCESS_TOKEN)
+    ? { headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` } }
+    : {};
 
-  if (loading) return <div className="wrapper-container mt-8">loading...</div>;
-  else if (error || !response) return <div className="wrapper-container mt-8"> News Not Found </div>;
-  else if (response)
+  useEffect(() => {
+    getNews();
+  }, []);
+
+  const getNews = () => {
+    axios
+      .get(API_BASE_URL + `/api/coins/news?id=${id}`, headers)
+      .then((res) => {
+        setNews(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  if (!news) return <div className="wrapper-container mt-8">loading...</div>;
+  else if (news.length === 0) return <div className="wrapper-container mt-8"> News Not Found </div>;
+  else
     return (
       <div className="container mt-8">
         <h2>Latest News of {id}</h2>
         <div className="row ">
-          {response &&
-            response.articles.map((article) => (
+          {news &&
+            news.articles.map((article) => (
               <a
                 key={article.title}
                 href={article.url}

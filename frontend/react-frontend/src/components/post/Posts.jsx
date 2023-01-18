@@ -22,9 +22,10 @@ const Posts = ({ currentUser }) => {
     getPosts();
   }, []);
 
+  console.log(posts);
   const getPosts = () => {
     axios
-      .get(API_BASE_URL + `/api/posts/${id}`, {
+      .get(API_BASE_URL + `/api/posts/${id}/`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
@@ -39,7 +40,7 @@ const Posts = ({ currentUser }) => {
 
   const deletePost = (e) => {
     axios
-      .delete(API_BASE_URL + `/api/posts/${e.target.value}`, {
+      .delete(API_BASE_URL + `/api/posts/${e.target.value}/`, {
         headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
       })
       .then(() => {
@@ -57,7 +58,7 @@ const Posts = ({ currentUser }) => {
 
     axios
       .post(
-        API_BASE_URL + "/api/posts",
+        API_BASE_URL + "/api/posts/",
         { body, coin: id },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
@@ -77,7 +78,7 @@ const Posts = ({ currentUser }) => {
 
     axios
       .put(
-        API_BASE_URL + `/api/posts/${e.target[1].value}`, //index아니라 postId사용
+        API_BASE_URL + `/api/posts/${e.target[1].value}/`, //index아니라 postId사용
         { body: edit, coin: id },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },

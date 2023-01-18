@@ -20,7 +20,7 @@ const Comments = ({ postId, currentUser }) => {
 
   const getComments = () => {
     axios
-      .get(API_BASE_URL + `/api/comments/${postId}`, {
+      .get(API_BASE_URL + `/api/comments/${postId}/`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
@@ -35,7 +35,7 @@ const Comments = ({ postId, currentUser }) => {
 
   const deleteComment = (e) => {
     axios
-      .delete(API_BASE_URL + `/api/comments/${e.target.value}`, {
+      .delete(API_BASE_URL + `/api/comments/${e.target.value}/`, {
         headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
       })
       .then(() => {
@@ -52,7 +52,7 @@ const Comments = ({ postId, currentUser }) => {
 
     axios
       .post(
-        API_BASE_URL + `/api/comments/${postId}`,
+        API_BASE_URL + `/api/comments/${postId}/`,
         { body },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
@@ -72,7 +72,7 @@ const Comments = ({ postId, currentUser }) => {
 
     axios
       .put(
-        API_BASE_URL + `/api/comments/${e.target[1].value}`,
+        API_BASE_URL + `/api/comments/${e.target[1].value}/`,
         { body: edit },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` },
@@ -114,7 +114,7 @@ const Comments = ({ postId, currentUser }) => {
           {comment.user.name}({comment.user.email}) {comment.dateCreated}
           {comment.dateCreated !== comment.dateUpdated ? <span> / edited: {comment.dateUpdated}</span> : <span></span>}
           &nbsp; &nbsp;
-          {comment.user.id === currentUser.id ? (
+          {currentUser && comment.user.id === currentUser.id ? (
             <div>
               <button className="btn-sm btn btn-outline-dark mr-1" value={index} onClick={(e) => openEdit(e)}>
                 edit

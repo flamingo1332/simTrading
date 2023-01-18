@@ -11,17 +11,17 @@ const Coins = () => {
   const [coins, setCoins] = useState([]);
   const [page, setPage] = useState(1);
   const [input, setInput] = useState(1);
+  const headers = localStorage.getItem(ACCESS_TOKEN)
+    ? { headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` } }
+    : {};
 
   useEffect(() => {
     getCoins();
-    console.log(page);
   }, [page]);
 
   const getCoins = () => {
     axios
-      .get(API_BASE_URL + `/api/coins/markets?ids=&per_page=100&page=${page}`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
-      })
+      .get(API_BASE_URL + `/api/coins/markets?id=&per_page=100&page=${page}`, headers)
       .then((res) => {
         setCoins(res.data);
         console.log(coins);

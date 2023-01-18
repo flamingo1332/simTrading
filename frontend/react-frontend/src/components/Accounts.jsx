@@ -6,7 +6,7 @@ import { ACCESS_TOKEN } from "../constants";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./coin/Coins.css";
-import OAuth2RedirectHandler from "../auth/oauth2/OAuth2RedirectHandler";
+
 const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
 
@@ -20,11 +20,13 @@ const Accounts = () => {
 
   const getAccounts = () => {
     axios
-      .get(API_BASE_URL + `/api/accounts`, {
+      .get(API_BASE_URL + `/api/accounts/`, {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
+        console.log(res.data);
         setAccounts(res.data);
+        console.log(accounts);
       })
       .catch((err) => {
         console.log(err);
@@ -37,7 +39,7 @@ const Accounts = () => {
     console.log({ name, description, balance: Number(balance) });
     axios
       .post(
-        API_BASE_URL + `/api/accounts`,
+        API_BASE_URL + `/api/accounts/`,
         { name, description, balance: Number(balance) },
         {
           headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
@@ -138,12 +140,12 @@ const Accounts = () => {
                   ))}
                   <br />
                   <span className="forum-sub-title text-muted">-History</span>
-                  {account.buyOrders.map((order) => (
+                  {account.buy_orders.map((order) => (
                     <div key={order.id} className="forum-sub-title text-muted">
                       {order.date} : bought {order.amount} {order.symbol} at price ${order.price}
                     </div>
                   ))}
-                  {account.sellOrders.map((order) => (
+                  {account.sell_orders.map((order) => (
                     <div key={order.id} className="forum-sub-title text-muted">
                       {order.date} : sold {order.amount} {order.symbol} at price ${order.price}
                     </div>

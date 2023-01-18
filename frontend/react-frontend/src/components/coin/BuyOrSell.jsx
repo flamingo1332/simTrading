@@ -60,7 +60,7 @@ const BuyOrSell = () => {
       toast("Not enough balance");
     } else {
       axios
-        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/buy?coin=${id}&amount=${buy}&price=${price}`, {
+        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/buy/?coin=${id}&amount=${buy}&price=${price}`, {
           headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
         })
         .then((res) => {
@@ -80,7 +80,7 @@ const BuyOrSell = () => {
       toast("You can't sell more than you have.");
     } else {
       axios
-        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/sell?coin=${id}&amount=${sell}&price=${price}`, {
+        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/sell/?coin=${id}&amount=${sell}&price=${price}`, {
           headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
         })
         .then((res) => {

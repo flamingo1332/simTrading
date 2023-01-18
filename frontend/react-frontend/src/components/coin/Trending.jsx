@@ -1,4 +1,3 @@
-import useAxios from "../../utils/useAxios";
 import CoinTrending from "./CoinTrending";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -6,38 +5,61 @@ import axios from "axios";
 import { ACCESS_TOKEN, API_BASE_URL } from "../../constants";
 
 const Trending = () => {
-  const { response, loading } = useAxios("/api/coins/trending");
-  const [marketData, setMarketData] = useState(null); //market data (trending coins)
+  const [marketData, setMarketData] = useState([]);
+  const [trending, setTrending] = useState(null);
+  const headers = localStorage.getItem(ACCESS_TOKEN)
+    ? { headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` } }
+    : {};
+  useEffect(() => {
+    axios
+      .get(API_BASE_URL + "/api/coins/trending/", headers)
+      .then((res) => {
+        setTrending(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
-    if (response) {
-      const temp = response.coins.map((coin) => {
+    if (trending !== null) {
+      const temp = trending.coins.map((coin) => {
         return `${coin.item.id}`;
       });
 
-      axios
-        .get(API_BASE_URL + `/api/coins/markets?id=${temp.toString()}&per_page=10&page=1`, {
-          headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
-        })
-        .then((res) => {
-          setMarketData(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      getMarketData(temp.toString());
     }
-  }, [response]);
+  }, [trending]);
 
-  if (loading) {
-    return <div className="wrapper-container mt-8">Loading...</div>;
-  } else if (response && marketData)
+  const getTrending = async () => {
+    await axios
+      .get(API_BASE_URL + "/api/coins/trending/", headers)
+      .then((res) => {
+        setTrending(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getMarketData = (id) => {
+    axios
+      .get(API_BASE_URL + `/api/coins/markets?id=${id}&per_page=10&page=1`, headers)
+      .then((res) => {
+        setMarketData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  if (marketData.length !== 0)
     return (
       <div className="mt-8">
         <h1 className="text-2xl mb-2">Top 7 Trending Coins</h1>
         <div className="container mt-5">
           <div className="row ">
-            {response &&
-              response.coins.map((coin) => (
+            {trending &&
+              trending.coins.map((coin) => (
                 <CoinTrending
                   key={coin.item.coin_id}
                   coin={coin.item}

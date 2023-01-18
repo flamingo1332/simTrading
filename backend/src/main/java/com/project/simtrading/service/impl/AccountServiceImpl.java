@@ -132,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
 
         if(coins.get(coin) - amount == 0){
             coins.remove(coin);
-            account.getPrices().remove(coin);
+            account.getPrices().remove(coin);   
         } else coins.put(coin, coins.get(coin) - amount);
 
 

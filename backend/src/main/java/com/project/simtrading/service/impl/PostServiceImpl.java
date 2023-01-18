@@ -28,6 +28,7 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private ModelMapper modelMappper;
+    
     @Override
     public PostDto createPost(PostRequest request, long id) {
         User loggedUser = userRepository.findById(id).orElseThrow(()

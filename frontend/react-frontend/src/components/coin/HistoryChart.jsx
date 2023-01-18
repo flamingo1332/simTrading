@@ -12,13 +12,14 @@ const HistoryChart = () => {
   const [days, setDays] = useState("30");
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const headers = localStorage.getItem(ACCESS_TOKEN)
+    ? { headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` } }
+    : {};
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(API_BASE_URL + `/api/coins/ohlc?id=${id}&vs_currency=usd&days=${days}`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
-      })
+      .get(API_BASE_URL + `/api/coins/ohlc?id=${id}&vs_currency=usd&days=${days}`, headers)
       .then((res) => {
         setResponse(res.data);
       })
