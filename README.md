@@ -7,6 +7,7 @@ SimTrading is a Trading Simulator app.
 
 - trade cryptocurrencies using up to 5 accounts.
 - share information & opinion with comment
+- Oauth2 login(google)
 
 
 ## Screenshots
