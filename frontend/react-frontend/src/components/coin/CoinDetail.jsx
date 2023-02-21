@@ -1,6 +1,4 @@
 import { useParams } from "react-router-dom";
-import BuyOrSell from "./BuyOrSell";
-import useAxios from "../../utils/useAxios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { API_BASE_URL } from "../../constants";

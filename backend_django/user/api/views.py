@@ -17,7 +17,6 @@ def getCurrentUser(request):
 
     # decoded_token = jwt.decode(jwt_token, key=settings.SECRET_KEY, algorithms=['HS256'])
     # user_id = decoded_token['user_id']
-
     user_id = request.user.id 
     user = User.objects.get(id=user_id)
     return Response(model_to_dict(user))

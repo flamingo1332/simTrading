@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import useAxios from "../../utils/useAxios";
 import { API_BASE_URL } from "../../constants";
 import { ACCESS_TOKEN } from "../../constants";
 import { toast } from "react-toastify";
@@ -18,7 +17,6 @@ const BuyOrSell = () => {
 
   useEffect(() => {
     getAccounts();
-    console.log(accounts);
   }, []);
 
   useEffect(() => {
@@ -40,9 +38,15 @@ const BuyOrSell = () => {
         console.log(err);
       });
   };
-
+  // * @babel/helper-define-map
+  // * alert
+  // * bootstrap
+  // * chartjs
+  // * cors
+  // * react-alert
+  // * react-modal
   const getPrice = async () => {
-    // price update every
+    // price update every min
     const result = await axios.get(API_BASE_URL + `/api/coins/price?id=${id}`, {
       headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
     });
@@ -52,46 +56,49 @@ const BuyOrSell = () => {
 
   const selectAccount = (e) => {
     setAccountId(e.target.value);
-    console.log(accountId);
   };
 
+  // Authorization : token was attached to request body, not headers.
   const buyCoin = () => {
-    if (buy * price > accounts[accountId].balance) {
-      toast("Not enough balance");
-    } else {
-      axios
-        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/buy/?coin=${id}&amount=${buy}&price=${price}`, {
-          headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
-        })
-        .then((res) => {
-          console.log(res.data);
-          toast(`${buy} ${id} bought to your account(id: ${accounts[accountId].id})`);
-          getAccounts();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    axios
+      .post(
+        API_BASE_URL + `/api/accounts/${accounts[accountId].id}/buy/?coin=${id}&amount=${buy}&price=${price}`,
+        {}, // body (prevent authorization from 바디에붙는것)
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        toast(`${buy} ${id} bought to your account(id: ${accounts[accountId].id})`);
+        getAccounts();
+      })
+      .catch((err) => {
+        console.log(err);
+        toast(err.response.data);
+      });
   };
 
   const sellCoin = () => {
-    const coinBalance = accounts[accountId].coins[id] ? accounts[accountId].coins[id] : 0;
-    if (sell > coinBalance) {
-      toast("You can't sell more than you have.");
-    } else {
-      axios
-        .post(API_BASE_URL + `/api/accounts/${accounts[accountId].id}/sell/?coin=${id}&amount=${sell}&price=${price}`, {
+    axios
+      .post(
+        API_BASE_URL + `/api/accounts/${accounts[accountId].id}/sell/?coin=${id}&amount=${sell}&price=${price}`,
+        {},
+        {
           headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
-        })
-        .then((res) => {
-          console.log(res.data);
-          toast(`${sell} ${id} sold from your account(id: ${accounts[accountId].id})`);
-          getAccounts();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        toast(`${sell} ${id} sold from your account(id: ${accounts[accountId].id})`);
+        getAccounts();
+      })
+      .catch((err) => {
+        console.log(err);
+        toast(err.response.data);
+      });
   };
 
   return (
@@ -117,13 +124,13 @@ const BuyOrSell = () => {
           <br />
           Current Price: ${price}
           <div>
-            <button className="btn btn-sm btn-primary mr-3" type="submit" value={buy} onClick={buyCoin}>
+            <button className="btn btn-sm btn-primary mr-3" type="submit" value={buy} onClick={() => buyCoin()}>
               Buy :{" "}
             </button>
             <input type="number" value={buy} onChange={(e) => setBuy(e.target.value)} min="0" />
             &nbsp; Total: ${buy * price}
             <br />
-            <button className="btn btn-sm btn-primary mr-3" type="submit" value={sell} onClick={sellCoin}>
+            <button className="btn btn-sm btn-primary mr-3" type="submit" value={sell} onClick={() => sellCoin()}>
               Sell :{" "}
             </button>
             <input type="number" value={sell} onChange={(e) => setSell(e.target.value)} min="0" />

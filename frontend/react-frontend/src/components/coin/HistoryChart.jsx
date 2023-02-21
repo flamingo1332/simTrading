@@ -1,9 +1,6 @@
 import { useParams } from "react-router-dom";
-import useAxios from "../../utils/useAxios";
-import moment from "moment";
 import ReactApexChart from "react-apexcharts";
 import { useState, useEffect } from "react";
-import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 import axios from "axios";
 import { API_BASE_URL, ACCESS_TOKEN } from "../../constants";
 

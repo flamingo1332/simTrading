@@ -35,6 +35,9 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+        if (error.message === "Request failed with status code 401" && localStorage.getItem(ACCESS_TOKEN)) {
+          handleLogout("AccessToken expired. Log in again!");
+        }
       });
   };
 
@@ -44,10 +47,7 @@ function App() {
         headers: { Authorization: "Bearer " + localStorage.getItem(ACCESS_TOKEN) },
       })
       .then((res) => {
-        localStorage.removeItem(ACCESS_TOKEN);
-        setCurrentUser(null);
-        setAuthenticated(false);
-        toast(`Account ${currentUser.email} Deleted!`);
+        handleLogout("Account Deleted!");
       })
       .catch((err) => {
         console.log(err);
@@ -55,11 +55,11 @@ function App() {
       });
   };
 
-  const handleLogout = () => {
+  const handleLogout = (msg) => {
     localStorage.removeItem(ACCESS_TOKEN);
     setCurrentUser(null);
     setAuthenticated(false);
-    toast("Safely logged out!");
+    toast(msg);
   };
 
   return (

@@ -12,7 +12,7 @@ const Header = (props) => {
 
   const logOut = () => {
     navigate("/");
-    props.handleLogout();
+    props.handleLogout("Safely logged out!");
   };
 
   const searchQuery = () => {

@@ -10,6 +10,7 @@ const Trending = () => {
   const headers = localStorage.getItem(ACCESS_TOKEN)
     ? { headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}` } }
     : {};
+
   useEffect(() => {
     axios
       .get(API_BASE_URL + "/api/coins/trending/", headers)

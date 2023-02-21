@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../../constants";
 import { ACCESS_TOKEN } from "../../constants";
 import { useEffect } from "react";

@@ -22,7 +22,6 @@ const Posts = ({ currentUser }) => {
     getPosts();
   }, []);
 
-  console.log(posts);
   const getPosts = () => {
     axios
       .get(API_BASE_URL + `/api/posts/${id}/`, {

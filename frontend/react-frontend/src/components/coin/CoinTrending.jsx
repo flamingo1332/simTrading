@@ -1,6 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
-import useAxios from "../../utils/useAxios";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 const CoinTrending = ({ coin, market }) => {
   return (
     <Link to={`/coins/${coin.id}`} className="col-md-4 text-dark text-decoration-none mb-3  ">

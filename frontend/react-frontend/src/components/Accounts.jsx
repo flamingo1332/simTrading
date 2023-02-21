@@ -36,7 +36,6 @@ const Accounts = () => {
   const createAccount = (e) => {
     e.preventDefault();
 
-    console.log({ name, description, balance: Number(balance) });
     axios
       .post(
         API_BASE_URL + `/api/accounts/`,
