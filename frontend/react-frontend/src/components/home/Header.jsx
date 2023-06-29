@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React  from "react";
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import googleLogo from "../../img/google-logo.png";
-import { GOOGLE_AUTH_URL, GOOGLE_AUTH_URL_DJANGO } from "../../constants";
+import {GOOGLE_AUTH_URL_DJANGO}  from "../../constants";
 import "./Header.css";
 import { useState } from "react";
 

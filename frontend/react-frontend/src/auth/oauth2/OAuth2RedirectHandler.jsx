@@ -9,9 +9,9 @@ const OAuth2RedirectHandler = () => {
   const error = params.get("error");
   const navigate = useNavigate();
 
-  console.log("oauth2RedirectHandler");
-  console.log(token);
-  console.log(error);
+  // console.log("oauth2RedirectHandler");
+  // console.log(token);
+  // console.log(error);
 
   useEffect(() => {
     if (token != null) {

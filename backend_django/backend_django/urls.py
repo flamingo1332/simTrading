@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/comments/', include('comments.api.urls')),
     path('api/posts/', include('posts.api.urls')),
     path('api/oauth2/', include('oauth2.api.urls')),
+    
 ]

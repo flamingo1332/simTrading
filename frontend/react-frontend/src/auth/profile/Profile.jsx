@@ -1,10 +1,6 @@
 import { useState } from "react";
 import "./Profile.css";
-import axios from "axios";
-import { API_BASE_URL } from "../../constants";
-import { ACCESS_TOKEN } from "../../constants";
-import { toast } from "react-toastify";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Profile = ({ currentUser, deleteAccount }) => {
   const [buffer, setBuffer] = useState(true);

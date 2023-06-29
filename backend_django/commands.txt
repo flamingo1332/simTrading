@@ -1,0 +1,2 @@
+docker build --tag simtrading_django .
+docker run --publish 8000:8000 simtrading_django

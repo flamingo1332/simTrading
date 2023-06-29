@@ -32,16 +32,6 @@ const Trending = () => {
     }
   }, [trending]);
 
-  const getTrending = async () => {
-    await axios
-      .get(API_BASE_URL + "/api/coins/trending/", headers)
-      .then((res) => {
-        setTrending(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   const getMarketData = (id) => {
     axios

@@ -63,10 +63,11 @@ class GoogleSigninCallBackApi(APIView):
         #                             image_url = user_data.get('picture', None),
         #                             provider = "google",
         #                             provider_id = user_data['sub'],)
-        print(user)
-        print(user.email)
-        print(user.provider)
-        print(user.provider_id)
+        
+        # print(user)
+        # print(user.email)
+        # print(user.provider)
+        # print(user.provider_id)
         
       
         token = AccessToken.for_user(user)

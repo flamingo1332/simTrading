@@ -78,7 +78,7 @@ def getOhlc(request):
 
 @api_view(['GET'])
 def getNews(request):
-    query = request.GET["id"]
+    query = str(request.GET["id"])
 
     news = newsApi.get_everything(page_size=3, q=query, language="en")
     return Response(news)

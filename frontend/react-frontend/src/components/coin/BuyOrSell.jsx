@@ -38,13 +38,8 @@ const BuyOrSell = () => {
         console.log(err);
       });
   };
-  // * @babel/helper-define-map
-  // * alert
-  // * bootstrap
-  // * chartjs
-  // * cors
-  // * react-alert
-  // * react-modal
+
+  
   const getPrice = async () => {
     // price update every min
     const result = await axios.get(API_BASE_URL + `/api/coins/price?id=${id}`, {
